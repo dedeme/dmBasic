@@ -10,9 +10,11 @@ itTest = function () {
   var fn =dmjs.func;
 
   var t = new dmjs.Test ("It Test: constructors");
+  /** @private @type{!Array.<number>} */
   var i0 = [];
   var i1 = [1];
   var i2 = [1, 2, 3];
+  /** @private @type{!Array.<string>} */
   var s0 = [];
   var s1 = ["one"];
   var s2 = ["one", "two", "three"];
@@ -24,6 +26,8 @@ itTest = function () {
   t.yes (It.from(i2).equals(It.from(i2)));
   t.not (It.from(i2).equals(It.from(i1)));
   t.not (It.from(i1).equals(It.from(i2)));
+
+//  t.not (It.from(i0).equals(It.from(s0)));
 
   t.yes ("[]", It.from(i0).toString());
   t.yes ("[1]", It.from(i1).toString());
@@ -44,6 +48,8 @@ itTest = function () {
   t.not (itMap.hasNext());
 
   t.log();
+
+  //----------------------------------
   t = new dmjs.Test ("It test: lazy");
 
   t.yes("[1]", It.from(i0).add(1).toString());
@@ -97,6 +103,8 @@ itTest = function () {
   t.yes("[1]", It.from(i2).takeWhile(pr1).toString());
 
   t.log();
+
+  //-----------------------------------------
   t = new dmjs.Test ("It test: progressive");
 
   t.yes(It.from(i0).all(fn.eq(1)));
@@ -139,6 +147,8 @@ itTest = function () {
   t.yes(2, It.from(i2).lastIndex(fn.negate(even)));
 
   t.log();
+
+  //--------------------------------------
   t = new dmjs.Test ("It test: in block");
 
   var tpS;
@@ -168,11 +178,22 @@ itTest = function () {
   }).toString());
 
 
-  //ui.log(It.from(["pérez", "pera", "p!zarra", "p¡zarra"]).sort().toString());
+  var arr = (["pérez", "pera", "p zarra", "pizarra"]);
+  var arr2 = It.from(arr).sort(function (a, b) {
+    return a > b ? 1 : b > a ? -1 : 0;
+  }).toArray();
+  t.yes(["p zarra", "pera", "pizarra", "pérez"].toString(), arr2.toString());
+
+  arr2 = It.from(arr).sort(function (a, b) {
+    return a.localeCompare(b);
+  }).toArray();
+  t.yes(["p zarra", "pera", "pérez", "pizarra"].toString(), arr2.toString());
 
   t.yes("[]", It.from(s0).shuffle().toString());
 
   t.log();
+
+  //-------------------------------------------------
   t = new dmjs.Test ("It test: static constructors");
 
 

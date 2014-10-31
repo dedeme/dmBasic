@@ -24,8 +24,9 @@ goog.provide('dmjs.It');
 /**
  * @constructor
  * @struct
+ * @template T, R
  * @param {function ():boolean} hasNext
- * @param {function ():?} next
+ * @param {function ():T} next
  */
 dmjs.It = function (hasNext, next) {
   'use strict';
@@ -34,15 +35,15 @@ dmjs.It = function (hasNext, next) {
     self;
 
   self = this;
-  /** type {function (*):!boolean} */
+  /** type {function ():!boolean} */
   this.hasNext = hasNext;
-  /** @type {function ():?} next */
+  /** @type {function ():T} next */
   this.next = next;
 
   /**
    * Compares elements with ===
    *
-   * @param {?dmjs.It.<*>} it
+   * @param {?dmjs.It.<T>} it
    * @return {!boolean}
    */
   this.equals = function (it) {
@@ -61,8 +62,8 @@ dmjs.It = function (hasNext, next) {
   /**
    * Compare elements with eq
    *
-   * @param {?dmjs.It.<*>} it
-   * @param {!function(*,*):boolean} eq
+   * @param {?dmjs.It.<T>} it
+   * @param {!function(T,T):boolean} eq
    * @return {!boolean}
    */
   this.eq = function (it, eq) {
@@ -80,7 +81,8 @@ dmjs.It = function (hasNext, next) {
 
 
   /**
-   * return a string representation of It, using 'toString()' function.
+   * return a string representation of It, using 'toString()' function for
+   * each element.
    * @return {!string}
    * @override
    */
@@ -95,7 +97,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns an array with It values.
-   * @return {!Array.<?>}
+   * @return {!Array.<T>}
    */
   this.toArray = function () {
     return this.reduce([], function (s, e) { s.push(e); return s; });
@@ -105,8 +107,8 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Adds an element. Its evaluation is lazy.
-   * @param {*} element
-   * @return {!dmjs.It.<?>}
+   * @param {T} element
+   * @return {!dmjs.It.<T>}
    */
   this.add0 = function (element) {
     var
@@ -128,9 +130,9 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Adds an element at 'index' position. Its evaluation is lazy.
-   * @param {*} element
+   * @param {T} element
    * @param {!number=} index
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.add = function (element, index) {
     var c = 0;
@@ -163,9 +165,9 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Adds elements of 'it' at 'index' position. Its evaluation is lazy.
-   * @param {!dmjs.It.<*>} it
+   * @param {!dmjs.It.<T>} it
    * @param {!number=} index
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.addIt = function (it, index) {
     var c = 0;
@@ -196,7 +198,7 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns this from 'n' element exclusive to end. Its evaluation is lazy.
    * @param {!number} n
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.drop = function (n) {
     var c = 0;
@@ -209,8 +211,8 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns this from the first element which 'f' value is false to end.
    * Its evaluation is lazy.
-   * @param {!function (?):!boolean} f
-   * @return {!dmjs.It.<?>}
+   * @param {!function (T):!boolean} f
+   * @return {!dmjs.It.<T>}
    */
   this.dropWhile = function (f) {
     var
@@ -243,8 +245,8 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns elements which 'f' value is true. Its evaluation is lazy.
-   * @param {function (?):!boolean} f
-   * @return {!dmjs.It.<?>}
+   * @param {function (T):!boolean} f
+   * @return {!dmjs.It.<T>}
    */
   this.filter = function (f) {
     var
@@ -280,8 +282,8 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns elements of this after apply 'f'. Its evaluation is lazy.
-   * @param {function (?):?} f
-   * @return {!dmjs.It.<?>}
+   * @param {function (T):R} f
+   * @return {!dmjs.It.<R>}
    */
   this.map = function (f) {
     return new dmjs.It(
@@ -293,7 +295,7 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the 'n' first elements. Its evaluation is lazy.
    * @param {!number} n
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.take = function (n) {
     var c = 0;
@@ -310,8 +312,8 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns elements while 'f' application is true. Its evaluation is lazy.
-   * @param {function (*):!boolean} f
-   * @return {!dmjs.It.<?>}
+   * @param {function (T):!boolean} f
+   * @return {!dmjs.It.<T>}
    */
   this.takeWhile = function (f) {
     var
@@ -340,7 +342,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns true if 'f' applied to every element is true.
-   * @param {function (*):!boolean} f
+   * @param {function (T):!boolean} f
    * @return {!boolean}
    */
   this.all = function (f) {
@@ -351,7 +353,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Returns true if 'f' is true applied to one element at least.
-   * @param {function (*):!boolean} f
+   * @param {function (T):!boolean} f
    * @return {!boolean}
    */
   this.any = function (f) {
@@ -370,7 +372,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Applies 'f' to every element.
-   * @param {function (?)} f
+   * @param {function (T)} f
    */
   this.each = function (f) {
     while (this.hasNext()) {
@@ -380,7 +382,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * Aplies 'f' to every element, giving its order number.
-   * @param {function (?, !number)} f
+   * @param {function (T, !number)} f
    */
   this.eachIx = function (f) {
     var c = 0;
@@ -392,8 +394,8 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the first element which is true applying 'f'.<p>
    * If the element does not exists returns undefined.
-   * @param {function (*):!boolean} f
-   * @return {?}
+   * @param {function (T):!boolean} f
+   * @return {T|undefined}
    */
   this.find = function (f) {
     var
@@ -411,8 +413,8 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the last element which is true applying 'f'.<p>
    * If the element does not exists returns undefined.
-   * @param {function (*):!boolean} f
-   * @return {?}
+   * @param {function (T):!boolean} f
+   * @return {T|undefined}
    */
   this.findLast = function (f) {
     var
@@ -425,7 +427,7 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the index of the first element which is true applying 'f'.<p>
    * If the element does not exists returns -1.
-   * @param {function (*):!boolean} f
+   * @param {function (T):!boolean} f
    * @return {!number}
    */
   this.index = function (f) {
@@ -449,7 +451,7 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the index of the last element which is true applying 'f'.<p>
    * If the element does not exists returns -1.
-   * @param {function (*):!boolean} f
+   * @param {function (T):!boolean} f
    * @return {!number}
    */
   this.lastIndex = function (f) {
@@ -461,9 +463,9 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns the result of applying 'f' to (seed, element) repeatedly.
    * i.e., f(f(f(seed, e1), e2), e3)
-   * @param {*} seed
-   * @param {function (?,?):?} f It is type: f(seed, element):seed
-   * @return {?}
+   * @param {R} seed
+   * @param {function (R,T):R} f
+   * @return {R}
    */
   this.reduce = function (seed, f) {
     this.each(function (e) { seed = f(seed, e); });
@@ -474,7 +476,7 @@ dmjs.It = function (hasNext, next) {
 
   /**
    * It converts previously this to an array.
-   * @return {!Array.<?>} Two iterators equals to this
+   * @return {!Array.<!dmjs.It.<T>>} Two iterators equals to this
    */
   this.duplicate = function () {
     var arr = this.toArray();
@@ -484,7 +486,7 @@ dmjs.It = function (hasNext, next) {
   /**
    * Returns this in reverse order.<p>
    * It converts previously this to an array.
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.reverse = function () {
     return dmjs.It.from(this.toArray().reverse());
@@ -493,15 +495,15 @@ dmjs.It = function (hasNext, next) {
   /**
    * Sorts with 'comparator'. It uses array.sort().<p>
    * It converts previously this to an array.
-   * @param {!function (?, ?):number=} comparator
-   * @return {!dmjs.It.<?>}
+   * @param {!function (T, T):number=} comparator
+   * @return {!dmjs.It.<T>}
    */
   this.sort = function (comparator) {
     return dmjs.It.from(this.toArray().sort(comparator));
   };
 
   /**
-   * @return {!dmjs.It.<?>}
+   * @return {!dmjs.It.<T>}
    */
   this.shuffle = function () {
     var
@@ -535,8 +537,9 @@ dmjs.It = function (hasNext, next) {
  * <li>Array of pairs [string, value]. It iterates sequentially over the pairs.
  * </li>
  * </ul>
- * @param {!Array.<?> | !string | !Object.<string, ?>} arr
- * @return {!dmjs.It.<?>}
+ * @template T
+ * @param {!Array.<T> | !string | !Object.<string, T>} arr
+ * @return {!dmjs.It.<T>}
  */
 dmjs.It.from = function (arr) {
   "use strict";
@@ -593,8 +596,9 @@ dmjs.It.keys = function (obj) {
 
 /**
  * Returns values (objects) from an array of pairs [string, object].
- * @param {!Object.<string, ?>} obj
- * @return {!dmjs.It.<?>}
+ * @template T
+ * @param {!Object.<string, T>} obj
+ * @return {!dmjs.It.<T>}
  */
 dmjs.It.values = function (obj) {
   "use strict";
@@ -665,8 +669,9 @@ dmjs.It.zip = function (it1, it2) {
 
 /**
  * Returns an Iterator with elements of other ones concatenated.
- * @param {!dmjs.It.<dmjs.It>} it
- * @return {!dmjs.It.<*>}
+ * @template T
+ * @param {!dmjs.It.<dmjs.It.<T>>} it
+ * @return {!dmjs.It.<T>}
  */
 dmjs.It.flat = function (it) {
   "use strict";
