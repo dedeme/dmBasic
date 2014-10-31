@@ -7,7 +7,8 @@ goog.require("mapTest");
 goog.require("crypTest");
 goog.require("strTest");
 goog.require("rndTest");
-// goog.require("i18nTest");
+goog.require("i18nTest");
+goog.require("dmjs.ui");
 
 main = function () {
   'use strict';
@@ -19,7 +20,7 @@ main = function () {
   crypTest();
   strTest();
   rndTest();
-//  i18nTest();
+  i18nTest();
 };
 
 goog.exportSymbol('main', main);

@@ -1,5 +1,5 @@
 /*
- * Copyright 19-ago-2013 ºDeme
+ * Copyright 19-Ago-2013 ºDeme
  *
  * This file is part of 'dmBasic'.
  *

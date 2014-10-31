@@ -105,7 +105,8 @@ goog.require("dmjs.cryp");
 
   /**
    * @param {!string} template Template string containing %0-%9 specifiers.
-   * @param {!Array} args Values formatString is to be filled with.
+   * @param {!Array.<string|number|Array>} args Values formatString is to be
+   *  filled with.
    * @return {!string} Formatted string.
    */
   ns.aformat = function (template, args) {

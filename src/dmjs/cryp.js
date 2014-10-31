@@ -141,7 +141,7 @@ goog.provide("dmjs.cryp");
       r;
 
     lg2 = lg * 2;
-    k = k + "codified in irreversibleDeme is good, very good!\n\r\8@@";
+    k = k + "codified in irreversibleDeme is good, very good!\n\r8@@";
     while (k.length < lg2) {
       k = k + k;
     }
