@@ -1,5 +1,5 @@
 /*
- * Copyright 11-ago-2013 ºDeme
+ * Copyright 11-Ago-2013 ºDeme
  *
  * This file is part of 'dmBasic'.
  *
@@ -277,15 +277,17 @@ dmjs.Date = function (day, month, year) {
  * @return {!dmjs.Date}
  */
 dmjs.Date.fromEn = function (date) {
-    var ps = date.split("-");
-    if (ps.length !== 3) {
-      ps = date.split("/");
-    }
-    return new dmjs.Date(
-      +ps[1],
-      +ps[0],
-      +ps[2]
-    );
+  "use strict";
+
+  var ps = date.split("-");
+  if (ps.length !== 3) {
+    ps = date.split("/");
+  }
+  return new dmjs.Date(
+    +ps[1],
+    +ps[0],
+    +ps[2]
+  );
 };
 
 /**

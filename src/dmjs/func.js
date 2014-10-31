@@ -91,29 +91,4 @@ goog.provide("dmjs.func");
    */
   ns.negate = function (f) { return function (e) { return !f(e); }; };
 
-  /**
-   * <p>Return a function for generating a parameter read-write in an object.
-   * </p>
-   * <p>A parameter is declarated, for example:</p>
-   * <p><tt>
-   *  /&#042;&#042;<br>
-   *  &nbsp;&#042; @type {function(!string=):!string} Default ""<br>
-   *  &nbsp;&#042;/<br>
-   *  this.sessionId = dmjs.func.param("");
-   * </tt></p>
-   */
-  ns.param = function (def) {
-    var
-      v;
-    v = def;
-
-    return function (value) {
-      if (value === undefined) {
-        return v;
-      }
-      v = value;
-      return v;
-    };
-  };
-
 }(dmjs.func));

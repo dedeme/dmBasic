@@ -23,6 +23,7 @@ goog.provide('dmjs.It');
 
 /**
  * @constructor
+ * @struct
  * @param {function ():boolean} hasNext
  * @param {function ():?} next
  */
