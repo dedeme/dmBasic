@@ -37,6 +37,7 @@ goog.provide("dmjs.Date");
  * <p>You can test if a dmjs.Date is valid with <tt>isNaN(date.base())</tt>.
  * This call returns <b>true</b> if 'date' is not valid.</p>
  * @constructor
+ * @struct
  * @param {!Date|string|number=} day (if it is a day its value is from 1)
  * @param {!number=} month (from 1 to 12)
  * @param {!number=} year Whith 2 o 4 digits.
