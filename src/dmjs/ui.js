@@ -29,7 +29,7 @@ goog.require('dmjs.It');
 
   /**
    * Returns a object dmjs.ui.O
-   * @param {Element|HTMLElement|Node|!string} obj
+   * @param {Element|HTMLElement|Node|string} obj
    * @return {dmjs.It.<Element>|dmjs.DomObject}
    */
   ns.$ = function (obj) {

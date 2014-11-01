@@ -38,7 +38,7 @@ dmjs.I18n = function (languages) {
     show,
     /**
      * @private
-     * @type {!function(!string, ...[(string,number,Array)]):!string}
+     * @type {!function(!string, ...[(string|number|Array)]):!string}
      */
     format = function (template, args) {
       args = Array.prototype.slice.call(arguments);
@@ -48,7 +48,7 @@ dmjs.I18n = function (languages) {
     bshow,
     /**
      * @private
-     * @type {!function(!string, ...[(string,number,Array)]):!string}
+     * @type {!function(!string, ...[(string|number|Array)]):!string}
      */
     bformat = function (textId, args) {
       args = Array.prototype.slice.call(arguments);
@@ -115,16 +115,18 @@ dmjs.I18n = function (languages) {
   this.languages = function () { return languages; };
 
   /**
-   * Selected language for translations.
-   * @type {!string} Default languages[0]
+   * Selected language for translations.<br>
+   * Default languages[0]
+   * @type {!string}
    */
   this.selected = languages[0];
 
   /**
    * Sets and gets translations. First field (index 0) in each row has got the
    * translation for <tt>this.languages()[0]</tt>, second field for
-   * <tt>this.languages()[1]</tt> and so.
-   * @type {!Array.<Array.<string>>} Default []
+   * <tt>this.languages()[1]</tt> and so.<br>
+   * Default []
+   * @type {!Array.<Array.<string>>}
    */
   this.small = [];
 
@@ -132,7 +134,9 @@ dmjs.I18n = function (languages) {
    * Sets and gets translations. First field (index 0) in each row is a key,
    * translation for <tt>this.languages()[0]</tt> is in the second field,
    * translation for <tt>this.languages()[1]</tt> is in the third one and so.
-   * @type {!Array.<Array.<string>>} Default []
+   * <br>
+   *  Default []
+   * @type {!Array.<Array.<string>>}
    */
   this.big = [];
 
@@ -151,7 +155,7 @@ dmjs.I18n = function (languages) {
    * __ = i18.__();
    * ...
    * alert(__("(%1): %0 is %1", "one", 1));</pre>
-   * @return {!function(!string, ...[(string,number,Array)]):!string}
+   * @return {!function(!string, ...[(string|number|Array)]):!string}
    */
   this.__ = function () { return format; };
 
@@ -172,7 +176,7 @@ dmjs.I18n = function (languages) {
    * b__ = i18.b__();
    * ...
    * alert(b__("key", "one", 1));</pre>
-   * @return {!function(!string, ...[(string,number,Array)]):!string}
+   * @return {!function(!string, ...[(string|number|Array)]):!string}
    */
   this.b__ = function () { return bformat; };
 };

@@ -37,7 +37,7 @@ dmjs.It = function (hasNext, next) {
   self = this;
   /** type {function ():!boolean} */
   this.hasNext = hasNext;
-  /** @type {function ():T} next */
+  /** @type {function ():T} */
   this.next = next;
 
   /**
@@ -538,7 +538,7 @@ dmjs.It = function (hasNext, next) {
  * </li>
  * </ul>
  * @template T
- * @param {!Array.<T> | !string | !Object.<string, T>} arr
+ * @param {Array.<T> | string | Object.<string, T>} arr
  * @return {!dmjs.It.<T>}
  */
 dmjs.It.from = function (arr) {
