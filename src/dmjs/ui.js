@@ -28,11 +28,37 @@ goog.require('dmjs.It');
   'use strict';
 
   /**
-   * Returns a object dmjs.ui.O
-   * @param {Element|HTMLElement|Node|string} obj
-   * @return {dmjs.It.<Element>|dmjs.DomObject}
+   * <p>Returns a new o existent dmjs.DomObject.</p>
+   * <p>If 'obj' is a string and its name starts with "#" it returns an
+   *  existent object. Otherwise it returns a new object.</p>
+   * <p>For example:<br>
+   * <tt>$(#entry)</tt> returns the object with id 'entry'.<br>
+   * <tt>$(td)</tt> Creates an returns an <tt>TD</tt> object.</p>
+   * <p>If 'obj' is other kind of object than string, it returns a
+   * <tt>dmjs.DomObject</tt> which wraps such one.
+   * @param {!(Element|HTMLElement|Node|string)} obj
+   * @return {!dmjs.DomObject}
    */
   ns.$ = function (obj) {
+    if (typeof obj === "string") {
+      if (obj.charAt(0) === "#") {
+        return new dmjs.DomObject(document.getElementById(obj.substring(1)));
+      }
+      return new dmjs.DomObject(document.createElement(obj));
+    }
+    return new dmjs.DomObject(obj);
+  };
+
+  /**
+   * <p>Returns an Iterator of Elements.</p>
+   * <p>If 'obj' is "" returns al elements in page.<br>
+   * if 'obj' is of form "@xxx" returns elements with tag name 'xxx'.<br>
+   * if it is of form "%xxx" returns elements with name "xxx".<br>
+   * if it is of form ".xxx" returns elements of class 'xxx'.</p>
+   * @param {!string} id
+   * @return {dmjs.It.<!dmjs.DomObject>}
+   */
+  ns.$$ = function (id) {
     var
       toIt;
 
@@ -54,25 +80,16 @@ goog.require('dmjs.It');
       );
     };
 
-    if (typeof obj === "string") {
-      if (obj === "") {
-        return toIt(document.getElementsByTagName("*"));
-      }
-      if (obj.charAt(0) === "#") {
-        return new dmjs.DomObject(document.getElementById(obj.substring(1)));
-      }
-      if (obj.charAt(0) === "@") {
-        return toIt(document.getElementsByTagName(obj.substring(1)));
-      }
-      if (obj.charAt(0) === "%") {
-        return toIt(document.getElementsByName(obj.substring(1)));
-      }
-      if (obj.charAt(0) === ".") {
-        return toIt(document.getElementsByClassName(obj.substring(1)));
-      }
-      return new dmjs.DomObject(document.createElement(obj));
+    if (id === "") {
+      return toIt(document.getElementsByTagName("*"));
     }
-    return new dmjs.DomObject(obj);
+    if (id.charAt(0) === "%") {
+      return toIt(document.getElementsByName(id.substring(1)));
+    }
+    if (id.charAt(0) === ".") {
+      return toIt(document.getElementsByClassName(id.substring(1)));
+    }
+    return toIt(document.getElementsByTagName(id));
   };
 
   /**
