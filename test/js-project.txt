@@ -1,0 +1,7 @@
+roots
+  src/
+  ../src
+namespaces
+  main  
+target
+  target/index.js

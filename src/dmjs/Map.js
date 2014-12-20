@@ -129,11 +129,9 @@ dmjs.Map.restore = function (serial) {
   "use strict";
 
   var
-    rs =
-      /** @private
-       * @type {!Array}
-       */
-    (JSON.parse(serial));
+    rs;
+
+  rs = /** @private @type {!Array} */ (JSON.parse(serial));
 
   return new dmjs.Map(rs);
 };
