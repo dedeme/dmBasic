@@ -28,11 +28,21 @@ goog.require("dmjs.It");
   'use strict';
 
   /**
-   * Returns an integer between 0 (inclusive) and n (exclusive)
-   * @param {!number} n Must be > 0
+   * <p>Returns an integer between n (inclusive) and m (exclusive), if m is
+   * less or equals to n returns n.</p>
+   * <p>If the optional parameter 'm' is not supplied it returns an integer
+   * between 0 (inclusive) and n (exclusive).
+   * @param {!number} n
+   * @param {!number=} m
    * @return {!number}
    */
-  ns.i = function (n) {
+  ns.i = function (n, m) {
+    if (m) {
+      if (m > n) {
+        return n + parseInt(Math.random() * (m - n), 10);
+      }
+      return n;
+    }
     return parseInt(Math.random() * n, 10);
   };
 

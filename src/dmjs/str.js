@@ -178,4 +178,35 @@ goog.require("dmjs.cryp");
     return false;
   };
 
+  /**
+   * Returns a substring of 's'
+   * @param {!string} s
+   * @param {!number} begin
+   * @param {!number=} end
+   * @return {!string}
+   */
+  ns.sub = function (s, begin, end) {
+    var
+      lg;
+
+    end = end || s.length;
+    lg = s.length;
+    if (begin < 0) {
+      begin += lg;
+    }
+    if (end < 0) {
+      end += lg;
+    }
+    if (begin < 0) {
+      begin = 0;
+    }
+    if (end > lg) {
+      end = lg;
+    }
+    if (end <= begin) {
+      return "";
+    }
+    return s.substring(begin, end);
+  };
+
 }(dmjs.str));

@@ -52,6 +52,12 @@ decTest = function () {
   t.yes(0, new Dec(.0).value());
   t.yes(0, new Dec(-.0).value());
 
+  t.yes(1.28, new Dec(1.275, 2).value());
+  t.yes(0.1, new Dec(0.09, 1).value());
+  t.yes(1.27, new Dec(1.27499, 2).value());
+  t.yes(3216234125.12, new Dec(3216234125.124, 2).value());
+  t.yes("3.216.234.125,12", new Dec(3216234125.124, 2).toEs());
+
   t.yes("0", new Dec().toString());
   t.yes("0", new Dec().toEs());
 
@@ -65,6 +71,8 @@ decTest = function () {
   t.yes("-16.234.125,12", new Dec(-16234125.124, 2).toEs());
   t.yes("3", new Dec(3.25499, 0).toEs());
   t.yes("16.234.125", new Dec(16234125.124, 0).toEs());
+  t.yes("16.234.125,10", new Dec(16234125.1, 2).toEs());
+  t.yes("16.234.125,00", new Dec(16234125, 2).toEs());
 
   t.yes(-3.25, dec("-3.25499", 2).value());
   t.yes(-16234125.12, dec("-16234125.124", 2).value());
@@ -77,11 +85,15 @@ decTest = function () {
   t.yes(-16234125.12, dmjs.Dec.fromEs("-16.234.125,124", 2).value());
   t.yes(3, dec("3.25499", 0).value());
   t.yes(16234125, dmjs.Dec.fromEs("16.234.125,124", 0).value());
+  t.yes(16234125.1, dmjs.Dec.fromEs("16.234.125,10", 2).value());
+  t.yes(16234125, dmjs.Dec.fromEs("16.234.125,00", 2).value());
 
   t.yes(-3.25, dmjs.Dec.fromEn("-3.25499", 2).value());
   t.yes(-16234125.12, dmjs.Dec.fromEn("-16,234,125.124", 2).value());
   t.yes(3, dmjs.Dec.fromEn("3.25499", 0).value());
   t.yes(16234125, dmjs.Dec.fromEn("16,234,125.124", 0).value());
+  t.yes(16234125.1, dmjs.Dec.fromEn("16,234,125.10", 2).value());
+  t.yes(16234125, dmjs.Dec.fromEn("16,234,125.00", 2).value());
 
   t.yes(isNaN(dmjs.Dec.validate("dd")));
   t.yes(isNaN(dmjs.Dec.validate("")));

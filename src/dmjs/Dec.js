@@ -50,8 +50,12 @@ dmjs.Dec = function (value, dec) {
     _dec = 0;
   }
   _power = Math.pow(10, _dec);
-  _n = +(value ? (Math.round(value * _power) / _power).toFixed(_dec) : 0);
-
+  _n = +(value ?
+      (Math.round((value * _power) +
+        (_dec > 0 ? 1 : 0) *
+        (Math.sign(value) * 0.000000001)) / _power)
+        .toFixed(_dec)
+    : 0);
   /**
    * @return {!number} Intial value rounded.
    */
@@ -74,12 +78,25 @@ dmjs.Dec = function (value, dec) {
   this.format = function (decimal, separator) {
     var
       r,
+      ix,
       divSep,
       posSep;
 
     separator = separator || "";
 
     r = Math.abs(_n).toString().replace(".", decimal);
+    if (_dec > 0) {
+      ix = r.indexOf(decimal);
+      if (ix === -1) {
+        ix = r.length;
+        r = r + decimal;
+      }
+      ix = _dec - (r.length - ix - 1);
+      while (ix > 0) {
+        r += "0";
+        --ix;
+      }
+    }
 
     if (separator !== "") {
       divSep = 4 + _dec;
