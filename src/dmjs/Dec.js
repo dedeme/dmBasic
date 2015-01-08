@@ -53,7 +53,7 @@ dmjs.Dec = function (value, dec) {
   _n = +(value ?
       (Math.round((value * _power) +
         (_dec > 0 ? 1 : 0) *
-        (Math.sign(value) * 0.000000001)) / _power)
+        ((value >= 0) ? 0.000000001 : -0.000000001)) / _power)
         .toFixed(_dec)
     : 0);
   /**

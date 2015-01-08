@@ -21,8 +21,11 @@
 /** Container of pairs key-value */
 goog.provide("dmjs.Map");
 
+goog.require("dmjs.It");
+
 /**
- * Creates an empty Map.
+ * <p>Creates a Map with values.</p>
+ * <p>It is possible to create an empty Map with 'empty()'</p>
  *
  * @constructor
  * @private
