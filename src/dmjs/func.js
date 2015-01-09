@@ -40,6 +40,31 @@ goog.provide("dmjs.func");
   };
 
   /**
+   * <p>Utility for setting inheritance.Example:</p>
+   * <pre>
+   * logic1.S = function (p) {
+   *   "use strict";
+   *
+   *   var self = dmjs.func.inherits(this, new logic1.Prop());
+   * ....
+   * </pre>
+   * @param {!Object} child
+   * @param {!Object} parent
+   * @return {!Object} The child object.
+   */
+  ns.inherits = function (child, parent) {
+    var
+      prop;
+
+    for (prop in parent) {
+      if (parent.hasOwnProperty(prop)) {
+        child[prop] = parent[prop];
+      }
+    }
+    return child;
+  };
+
+  /**
    * Returns a function que returns true if its argument is '===' to 'o'.
    * @param {*} o
    * @return (function (*):!boolean)
