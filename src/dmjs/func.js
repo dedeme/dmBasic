@@ -50,7 +50,7 @@ goog.provide("dmjs.func");
    * </pre>
    * @param {!Object} child
    * @param {!Object} parent
-   * @return {!Object} The child object.
+   * @return {?} The child object.
    */
   ns.inherits = function (child, parent) {
     var
