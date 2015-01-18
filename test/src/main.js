@@ -8,6 +8,7 @@ goog.require("crypTest");
 goog.require("strTest");
 goog.require("rndTest");
 goog.require("i18nTest");
+goog.require("uiTest");
 goog.require("dmjs.ui");
 
 main = function () {
@@ -21,6 +22,7 @@ main = function () {
   strTest();
   rndTest();
   i18nTest();
+//  uiTest();
 };
 
 goog.exportSymbol('main', main);

@@ -37,9 +37,9 @@ itTest = function () {
   t.yes ("1", It.from(i1).toArray().toString());
   t.yes ("1,2,3", It.from(i2).toArray().toString());
 
-  t.yes ("[]", It.from("").toString())
-  t.yes ("[a]", It.from("a").toString())
-  t.yes ("[a, b, c]", It.from("abc").toString())
+  t.yes ("[]", It.from("").toString());
+  t.yes ("[a]", It.from("a").toString());
+  t.yes ("[a, b, c]", It.from("abc").toString());
 
   t.yes ("[]", It.from({}).toString());
   var itMap = It.from({"one":1, "two":2});

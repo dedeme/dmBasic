@@ -73,6 +73,7 @@ dmjs.Session = function (storeKey, timeOut) {//
    * @return {!Object.<string, ?>} data recorded with open()
    */
   this.data = function () {
+    /*jslint closure:true */
     return /** @type {!Object.<string, ?>} */(JSON.parse(data["data"]));
   };
 

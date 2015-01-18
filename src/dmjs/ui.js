@@ -16,7 +16,7 @@
  * along with 'dmBasic'.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*globals goog, dmjs */
+/*globals goog, dmjs, ActiveXObject */
 
 /** Utilities for handling DOM elements */
 goog.provide("dmjs.ui");
@@ -170,6 +170,49 @@ goog.require('dmjs.It');
     };
 
     load();
+  };
+
+  /**
+   * Load dynamically a text file from server.
+   * @param {!string} path It must be a relative path
+   * @param {!function(!string)} action If operation fails function string
+   *  has value "".
+   */
+  ns.loadText = function (path, action) {
+    var
+      tx,
+      rq;
+
+    try {
+      rq = new XMLHttpRequest();
+    } catch (e1) {
+      try {
+        rq = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e2) {
+        try {
+          rq = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e3) {
+          return null;
+        }
+      }
+    }
+
+    rq.onreadystatechange = function () {
+      if (rq.readyState === 4) {
+        tx = rq.responseText;
+
+        while (tx.length && tx.charCodeAt[0] < 32) {
+          tx = tx.substring(1);
+        }
+        while (tx.length && tx.charCodeAt(tx.length - 1) < 32) {
+          tx = tx.substring(0, tx.length - 1);
+        }
+
+        action(tx);
+      }
+    };
+    rq.open("POST", path, true);
+    rq.send(null);
   };
 
   /**
