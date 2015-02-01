@@ -175,8 +175,7 @@ goog.require('dmjs.It');
   /**
    * Load dynamically a text file from server.
    * @param {!string} path It must be a relative path
-   * @param {!function(!string)} action If operation fails function string
-   *  has value "".
+   * @param {!function(!string)} action Function which receive text read.
    */
   ns.loadText = function (path, action) {
     var

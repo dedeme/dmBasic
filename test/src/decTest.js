@@ -78,6 +78,10 @@ decTest = function () {
   t.yes(-16234125.12, dec("-16234125.124", 2).value());
   t.yes(3, dec("3.25499", 0).value());
   t.yes(16234125, dec("16234125.124", 0).value());
+  t.yes("3.424.362,76",
+    new Dec(
+      new Dec(25713.54, 2).value()/new Dec(0.007509, 8).value(), 2)
+      .toEs());
 
   t.yes(0, dec(".0", 2).value());
   t.yes(0, dmjs.Dec.fromEs(",0", 2).value());
