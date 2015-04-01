@@ -52,9 +52,9 @@ goog.require('dmjs.It');
   /**
    * <p>Returns an Iterator of Elements.</p>
    * <p>If 'obj' is "" returns al elements in page.<br>
-   * if 'obj' is of form "@xxx" returns elements with tag name 'xxx'.<br>
-   * if it is of form "%xxx" returns elements with name "xxx".<br>
-   * if it is of form ".xxx" returns elements of class 'xxx'.</p>
+   * if 'obj' is of form "%xxx" returns elements with name "xxx".<br>
+   * if it is of form ".xxx" returns elements of class 'xxx'.<br>
+   * if it is of form "xxx" returns elements with tag name 'xxx'.</p>
    * @param {!string} id
    * @return {dmjs.It.<!dmjs.DomObject>}
    */
@@ -321,7 +321,7 @@ goog.require('dmjs.It');
   /**
    * <p>Create a select with list as entries. Every option has an id formed with
    *   'idPrefix' + "_" + 'its list name' and a name equals to 'idPrefix'.
-   *   Also select widget has name 'idPrefix' too.</p>
+   *   Also select widget has name 'idPrefix'.</p>
    * @param {!string} idPrefix Prefix to make option id.
    * @param {!Array.<string>} list Entries of select. Default selected goes
    *   marked with '+' (e.g. ["1", "+2", "3"])

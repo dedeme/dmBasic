@@ -127,6 +127,8 @@ goog.provide("dmjs.cryp");
 
   /**
    * Returns 'k' codified in irreversible way, using 'lg' hexadecimal digits.
+   * This function only uses the first 'lg * 2' characters of 'k'. If you
+   * want to use every character of 'k' you can call function keyCripAll().
    *
    * @param {!string} k String to codify
    * @param {!number} lg length of result
@@ -167,6 +169,18 @@ goog.provide("dmjs.cryp");
       r.push(ns.d2h(dt[i]));
     }
     return r.join("");
+  };
+
+  /**
+   * Returns 'k' codified in irreversible way, using 'lg' hexadecimal digits.
+   * This function use every character of 'k'.
+   *
+   * @param {!string} k String to codify
+   * @param {!number} lg length of result
+   * @return {!string} 'lg' hexadecimal digits
+   */
+  ns.keyCrypAll = function (k, lg) {
+    return ns.keyCryp(k, k.length).substring(0, lg);
   };
 
   /**
