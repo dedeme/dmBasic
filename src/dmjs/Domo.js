@@ -131,7 +131,7 @@ export default class Domo {
 
   /**
    * Removes a child element.
-   * @param {!github_dedeme.Domo} el Param
+   * @param {!Domo} el Param
    * @return {!Domo} Result
    */
   remove (el) {

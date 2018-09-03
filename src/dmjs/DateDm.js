@@ -24,14 +24,14 @@ export default class DateDm {
     this._date = new Date(year, month - 1, day, 12, 0, 0);
   }
 
-  /** @type {!Date} The Date representation of 'this' */
+  /** @return {!Date} The Date representation of 'this' */
   get date () {
     return this._date;
   }
 
   /**
  * In range 1-31
- * @type {number} Day of month
+ * @return {number} Day of month
  */
   get day () {
     return this._date.getDate();
@@ -39,13 +39,13 @@ export default class DateDm {
 
   /**
  *  In range 1-12
- * @type {number} Month
+ * @return {number} Month
  */
   get month () {
     return this._date.getMonth() + 1;
   }
 
-  /** @type {number} Year */
+  /** @return {number} Year */
   get year () {
     return this._date.getFullYear();
   }
@@ -55,9 +55,9 @@ export default class DateDm {
  * @return {boolean} "true" if 'd' is equals to 'this'
  */
   eq (d) {
-    return this.day() === d.day() &&
-         this.month() === d.month() &&
-         this.year() === d.year();
+    return this.day === d.day &&
+         this.month === d.month &&
+         this.year === d.year;
   }
 
   /**
@@ -66,11 +66,11 @@ export default class DateDm {
    *   === to 'd'
    */
   compare (d) {
-    return this.year() === d.year()
-      ? this.month() === d.month()
-        ? this.day() - d.day()
-        : this.month() - d.month()
-      : this.year() - d.year();
+    return this.year === d.year
+      ? this.month === d.month
+        ? this.day - d.day
+        : this.month - d.month
+      : this.year - d.year;
   }
 
   /**
@@ -115,13 +115,13 @@ export default class DateDm {
       template = template.split(code).join(value);
     };
 
-    const d = String(this.day());
-    const dw = this.date().getDay();
+    const d = String(this.day);
+    const dw = this.date.getDay();
     const w = DateDm.week()[dw];
-    const mn = this.date().getMonth();
+    const mn = this.date.getMonth();
     const m = String(mn + 1);
     const ms = DateDm.months()[mn];
-    const y = "0000" + this.year();
+    const y = "0000" + this.year;
 
     r("%d", d);
     r("%D", d.length === 1 ? "0" + d : d);
@@ -143,9 +143,9 @@ export default class DateDm {
    * @return {string} Returns [this] in format "yyyymmdd"
    */
   toBase () {
-    const y = "0000" + this.year();
-    const m = "00" + this.month();
-    const d = "00" + this.day();
+    const y = "0000" + this.year;
+    const m = "00" + this.month;
+    const d = "00" + this.day;
     return y.substring(y.length - 4) +
     m.substring(m.length - 2) +
     d.substring(d.length - 2);
@@ -153,16 +153,16 @@ export default class DateDm {
 
   /** @return {number} In milliseconds since Jan 1 of 1970 */
   toTime () {
-    return this.date().getTime();
+    return this.date.getTime();
   }
 
   /**
    * @return {string} Spanish format
    */
   toString () {
-    const y = "0000" + this.year();
-    const m = "00" + this.month();
-    const d = "00" + this.day();
+    const y = "0000" + this.year;
+    const m = "00" + this.month;
+    const d = "00" + this.day;
     return d.substring(d.length - 2) + "/" +
     m.substring(m.length - 2) + "/" +
     y.substring(y.length - 4);
@@ -170,7 +170,7 @@ export default class DateDm {
 
   /** @return {!Array<?>} 'this' serialized */
   serialize () {
-    return [this.day(), this.month(), this.year()];
+    return [this.day, this.month, this.year];
   }
 
   /**

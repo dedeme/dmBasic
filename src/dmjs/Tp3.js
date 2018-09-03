@@ -21,7 +21,10 @@ export default class Tp3 extends Tp {
     this._e3 = e3;
   }
 
-  /** @type {C} The third element of 'this' */
+  /**
+   * @template C
+   * @return {C} The third element of 'this'
+   */
   get e3 () {
     return this._e3;
   }

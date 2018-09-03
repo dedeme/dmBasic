@@ -102,7 +102,7 @@ export default class Store {
    */
   static values () {
     return Store.keys()
-      .map(e => Store.get(e));
+      .map(e => Store.take(e));
   }
 
   /**

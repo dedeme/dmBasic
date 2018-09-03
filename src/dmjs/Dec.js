@@ -67,15 +67,14 @@ export default class Dec {
   }
 
   /**
-   *  @type {number}
+   *  @return {number} Value
    */
   get value () {
     return this._value;
   }
 
   /**
-   * Number of decimal positions.
-   * @type {number}
+   * @return {number} Number of decimal positions.
    */
   get scale () {
     return this._scale;

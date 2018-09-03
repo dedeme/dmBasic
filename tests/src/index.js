@@ -16,3 +16,5 @@ export function main () {
   RndTest.run();
   ItTest.run();
 }
+
+window["main"] = main;

@@ -16,12 +16,18 @@ export default class Tp {
     this._e2 = e2;
   }
 
-  /** @type {A} The first element of 'this' */
+  /**
+   * @template A
+   * @return {A} The first element of 'this'
+   */
   get e1 () {
     return this._e1;
   }
 
-  /** @type {B} The second element of 'this' */
+  /**
+   * @template B
+   * @return {B} The second element of 'this'
+   */
   get e2 () {
     return this._e2;
   }

@@ -2,6 +2,8 @@
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
 import Rnd from "./Rnd.js";
+//eslint-disable-next-line
+import Tp from "./Tp.js";
 
 /**
  * Random Box
@@ -31,14 +33,14 @@ export default class Rbox {
   }
 
   /**
-   * @return {Iterator} An unlimited random iterator over elements of 'this'
+   * @return {*} An unlimited random iterator over elements of 'this'
    */
   to () {
     const it = {};
     it[Symbol.iterator] = () => {
       return {
         "next": () => {
-          return {"done": false, "value": this.next()}; 
+          return {"done": false, "value": this.next()};
         }
       };
     };
@@ -55,7 +57,7 @@ export default class Rbox {
    */
   static mk (es) {
     const r = [];
-    es.forEach(function (e) {
+    es.forEach(e => {
       for (let i = 0; i < e.e2; ++i) r.push(e.e1);
     });
     return new Rbox(r);

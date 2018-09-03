@@ -1,0 +1,36 @@
+#!/bin/bash
+
+JS_ROOT="../../../"
+LIBS="../src/dmjs"
+
+# DON'T CHANGE vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+COMPILER=$JS_ROOT/tools/closure-compiler-v20171203.jar
+for LIB in $LIBS
+do
+  cp -fR $LIB src
+done
+
+compile () {
+  java -jar $COMPILER \
+    --warning_level VERBOSE \
+    --dependency_mode STRICT \
+    --module_resolution BROWSER \
+    --js_module_root "src" \
+    --dependency_mode  NONE \
+    --js src \
+    --compilation_level=ADVANCED_OPTIMIZATIONS \
+    --entry_point index.js \
+    --js_output_file www/index.js
+}
+
+echo "Compiling..."
+compile
+echo "... end compilation."
+
+cp -f www/index-closure.html www/index.html
+
+for LIB in $LIBS
+do
+  rm -fR src/$LIB
+done

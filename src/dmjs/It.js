@@ -19,7 +19,7 @@ export default class It {
    * @param {function ():boolean} has Returns true if 'this' has more elements.
    * @param {function ():T} value Returns the current value. If 'has' returns
    *  'false' throws an error.
-   * @param {function ():It<T>} next Returns the next step of 'this'. If
+   * @param {function ():!It<T>} next Returns the next step of 'this'. If
    *  'has' returns 'false' throws an error.
    */
   constructor (has, value, next) {
@@ -29,17 +29,25 @@ export default class It {
     this[Symbol.iterator] = () => this;
   }
 
-  /** @type {boolean} 'true' if there are more elements. */
+  /**
+   * @return {boolean} 'true' if there are more elements.
+   */
   get has () {
     return this._has();
   }
 
-  /** @type {T} The current element */
+  /**
+   * @template T
+   * @return {T} The current element
+   */
   get value () {
     return this._value();
   }
 
-  /** @type {!It<T>} The next It. */
+  /**
+   * @template T
+   * @return {!It<T>} The next It.
+   */
   get next () {
     return this._next();
   }
@@ -47,7 +55,7 @@ export default class It {
   /**
    * Equals comparing with [f]
    * @param {!It<T>} i onother It
-   * @param {function(T, T):boolean} f If is undefined its value is '==='
+   * @param {function(T, T):boolean =} f If is undefined its value is '==='
    * @return {boolean} If 'this' is equals to 'i'
    */
   eq (i, f) {
@@ -237,7 +245,7 @@ export default class It {
 
   /**
    * Tests whether at least one element in the array is === to e
-   * @param {function (T):boolean} e Element to search
+   * @param {T} e Element to search
    * @return {boolean} Result
    */
   contains (e) {
@@ -411,7 +419,7 @@ export default class It {
     return new It(
       () => false,
       () => null,
-      () => null
+      () => It.empty()
     );
   }
 
