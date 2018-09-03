@@ -1,14 +1,8 @@
-// Copyright 03-Sep-2017 ºDeme
-// GNU General Public License - V3 <http://www.gnu.org/licenses/>
-
 import Test from "./dmjs/Test.js";
 import Cryp from "./dmjs/Cryp.js";
-
 export default class CrypTest {
   static run () {
     const t = new Test("Cryp");
-    //t.eq(Cryp.genK(12).length, 12);
-    //console.log(Cryp.genK(6));
     t.eq(Cryp.key("deme", 6), "wiWTB9");
     t.eq(Cryp.key("Generaro", 5), "Ixy8I");
     t.eq(Cryp.key("Generara", 5), "0DIih");
@@ -20,9 +14,6 @@ export default class CrypTest {
     t.eq(Cryp.decryp("", Cryp.cryp("", "1")), "1");
     t.eq(Cryp.decryp("", Cryp.cryp("", "")), "");
     t.eq(Cryp.decryp("abc", Cryp.cryp("abc", "\n\ta€b c")), "\n\ta€b c");
-
     t.log();
   }
 }
-
-

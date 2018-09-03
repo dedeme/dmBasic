@@ -1,9 +1,5 @@
-// Copyright 1-Sep-2017 ºDeme
-// GNU General Public License - V3 <http://www.gnu.org/licenses/>
-
 import B64 from "./dmjs/B64.js";
 import Test from "./dmjs/Test.js";
-
 export default class B64Test {
   static run () {
     const t = new Test("B64");
@@ -15,9 +11,6 @@ export default class B64Test {
     }
     const arr2 = B64.decodeBytes(B64.encodeBytes(arr));
     t.yes(arr.toString() === (arr2.toString()));
-
     t.log();
   }
 }
-
-

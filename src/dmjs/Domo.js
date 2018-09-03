@@ -1,25 +1,24 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/** Class for envelopping DOM objects */
-goog.provide("github_dedeme.Domo");
-goog.require("github_dedeme.It");
+import It from "./It.js";
 
-github_dedeme.Domo/**/ = class {
-  /** @param {*} e */
+/** Class for envelopping DOM objects */
+export default class Domo {
+  /** @param {*} e  Param*/
   constructor (e) {
     /** @private */
     this._e = e;
   }
 
-  /** @return {*} */
+  /** @return {*} Element wrapped */
   e () {
     return this._e;
   }
 
   /**
-   * @param {string=} tx
-   * @return {?}
+   * @param {string=} tx Param
+   * @return {?} Result
    */
   html (tx) {
     if (tx === undefined) return this._e.innerHTML/**/;
@@ -28,8 +27,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {string=} tx
-   * @return {?}
+   * @param {string=} tx Param
+   * @return {?} Result
    */
   text (tx) {
     if (tx === undefined) return this._e.textContent/**/;
@@ -38,8 +37,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {string=} tx
-   * @return {?}
+   * @param {string=} tx Param
+   * @return {?} Result
    */
   klass (tx) {
     if (tx === undefined) return this._e.className/**/;
@@ -48,8 +47,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {string=} s
-   * @return {?}
+   * @param {string=} s Param
+   * @return {?} Result
    */
   style (s) {
     if (s === undefined) return this._e.getAttribute("style");
@@ -58,18 +57,19 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {string} tx
-   * @return {!Domo}
+   * @param {string} key Style key
+   * @param {string} value Style value
+   * @return {!Domo} Result
    */
-  addStyle(tx) {
-    this._e.setAttribute("style", this.style() + ";" + tx);
+  setStyle (key, value) {
+    this._e.style[key] = value;
     return this;
   }
 
   /**
-   * @param {string} key
-   * @param {?=} value
-   * @return {?}
+   * @param {string} key Param
+   * @param {?=} value Param
+   * @return {?} Result
    */
   att (key, value) {
     if (value === undefined) return this._e.getAttribute(key);
@@ -78,8 +78,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {boolean=} value
-   * @return {?}
+   * @param {boolean=} value Param
+   * @return {?} Result
    */
   disabled (value) {
     if (value === undefined) return this._e.disabled/**/;
@@ -88,8 +88,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {boolean=} value
-   * @return {?}
+   * @param {boolean=} value Param
+   * @return {?} Result
    */
   checked (value) {
     if (value === undefined) return this._e.checked/**/;
@@ -98,8 +98,8 @@ github_dedeme.Domo/**/ = class {
   }
 
   /**
-   * @param {?=} v
-   * @return {?}
+   * @param {?=} v Param
+   * @return {?} Result
    */
   value (v) {
     if (v === undefined) return this._e.value/**/;
@@ -109,8 +109,8 @@ github_dedeme.Domo/**/ = class {
 
   /**
    * Appends a child element.
-   * @param {!github_dedeme.Domo} el
-   * @return {!github_dedeme.Domo}
+   * @param {!Domo} el Param
+   * @return {!Domo} Result
    */
   add (el) {
     this._e.appendChild(el._e);
@@ -119,11 +119,11 @@ github_dedeme.Domo/**/ = class {
 
   /**
    * Adds an iterator over elements.
-   * @param {github_dedeme.It<!github_dedeme.Domo>} els
-   * @return {!github_dedeme.Domo}
+   * @param {!Array<!Domo>} els Param
+   * @return {!Domo} Result
    */
-  addIt (els) {
-    els.each(el => {
+  adds (els) {
+    els.forEach(el => {
       this._e.appendChild(el._e);
     });
     return this;
@@ -131,8 +131,8 @@ github_dedeme.Domo/**/ = class {
 
   /**
    * Removes a child element.
-   * @param {!github_dedeme.Domo} el
-   * @return {!github_dedeme.Domo}
+   * @param {!github_dedeme.Domo} el Param
+   * @return {!Domo} Result
    */
   remove (el) {
     this._e.removeChild(el._e);
@@ -141,7 +141,7 @@ github_dedeme.Domo/**/ = class {
 
   /**
    * Removes every child element.
-   * @return {!github_dedeme.Domo}
+   * @return {!Domo} Result
    */
   removeAll () {
     this._e.innerHTML/**/ = "";
@@ -150,26 +150,16 @@ github_dedeme.Domo/**/ = class {
 
   /**
    * Iterator over child elements.
-   * @return {github_dedeme.It<!github_dedeme.Domo>}
+   * @return {It<!Domo>} Result
    */
   get nodes () {
-    let nextNode = this._e.firstChild/**/;
-    return new github_dedeme.It(
-      () => nextNode !== null,
-      () => {
-        const r = nextNode;
-        nextNode = nextNode.nextSibling/**/;
-        return new github_dedeme.Domo(r);
-      }
-    );
-  }
-
-  /**
-   * @private
-   * @param {github_dedeme.It<!github_dedeme.Domo>} value
-   */
-  set nodes (value) {
-    throw("nodes is read only");
+    const it = node =>
+      new It(
+        () => node !== null,
+        () => node,
+        () => it(node.nextSibling)
+      );
+    return it(this._e.firstChild);
   }
 
   /**
@@ -177,12 +167,12 @@ github_dedeme.Domo/**/ = class {
    *        "dblclick", "focus", "keydown", "keypress", "keyup", "load",
    *        "mousedown", "mousemove", "mouseout", "mouseover", "mouseup",
    *        "mouseweel", "select", "selectstart" or "submit".
-   * @param {function (*)} action
-   * @return {!github_dedeme.Domo}
+   * @param {function (*)} action Function to run
+   * @return {!Domo} Result
    */
   on (event, action) {
     this._e.addEventListener(event, action, false);
     return this;
   }
-};
+}
 
