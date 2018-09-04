@@ -35,7 +35,7 @@ export default class RndTest {
     let box = new Rbox(["a", "b", "c"]);
     // It.range(7).each(() => console.log(box.next()));
     //let i = 0;
-    //for (const e of box.to()) {
+    //for (const e of box) {
     //  if (i++ === 7) break;
     //  console.log(e);
     //}

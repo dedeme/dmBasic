@@ -39,10 +39,10 @@ export default class Ui {
    *    - if 's' is of form ".xxx" returns elements of class 'xxx'.
    *    - if 's' is of form "xxx" returns elements with tag name 'xxx'.
    * @param {string} s Param
-   * @return {!It<!Domo>} Result
+   * @return {!Array<!Domo>} Result
    */
   static $$ (s) {
-    const toDomo = arr => arr.map(e => new Domo(e));
+    const toDomo = arr => Array.from(arr).map(e => new Domo(e));
 
     return s === ""
       ? toDomo(document.getElementsByTagName("*"))

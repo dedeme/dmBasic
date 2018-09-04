@@ -47,9 +47,9 @@ export default class ItTest {
     t.eq(It.from(i1).toString(), "[1]");
     t.eq(It.from(i2).toString(), "[1, 2, 3]");
 
-    t.eq([...It.from(i0).to()].toString(), "");
-    t.eq([...It.from(i1).to()].toString(), "1");
-    t.eq([...It.from(i2).to()].toString(), "1,2,3");
+    t.eq([...It.from(i0)].toString(), "");
+    t.eq([...It.from(i1)].toString(), "1");
+    t.eq([...It.from(i2)].toString(), "1,2,3");
 
     // lazy --------------------------------------------------
 
@@ -230,11 +230,11 @@ export default class ItTest {
 
     const arr = ["pérez", "pera", "p zarra", "pizarra"];
     t.eq(
-      [...It.from(arr).sort().to()].toString(),
+      [...It.from(arr).sort()].toString(),
       ["p zarra", "pera", "pizarra", "pérez"].toString()
     );
     t.eq(
-      [...It.sortLocale(It.from(arr)).to()].toString(),
+      [...It.sortLocale(It.from(arr))].toString(),
       ["p zarra", "pera", "pérez", "pizarra"].toString()
     );
 

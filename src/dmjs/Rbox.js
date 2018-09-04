@@ -18,6 +18,14 @@ export default class Rbox {
     /** @private */
     this._box = Array.from(es);
     Rbox.shuffle(this._box);
+
+    this[Symbol.iterator] = () => {
+      return {
+        "next": () => {
+          return {"done": false, "value": this.next()};
+        }
+      };
+    };
   }
 
   /**
@@ -30,21 +38,6 @@ export default class Rbox {
       Rbox.shuffle(this._box);
     }
     return this._box.pop();
-  }
-
-  /**
-   * @return {*} An unlimited random iterator over elements of 'this'
-   */
-  to () {
-    const it = {};
-    it[Symbol.iterator] = () => {
-      return {
-        "next": () => {
-          return {"done": false, "value": this.next()};
-        }
-      };
-    };
-    return it;
   }
 
   /**

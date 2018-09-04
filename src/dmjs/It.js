@@ -12,6 +12,7 @@ import Tp3 from "./Tp3.js";
 /**
  * Lazy iterator
  * @template T
+ * @implements {Iterable<T>}
  */
 export default class It {
   /**
@@ -26,7 +27,19 @@ export default class It {
     this._has = has;
     this._value = value;
     this._next = next;
-    this[Symbol.iterator] = () => this;
+    this[Symbol.iterator] = () => {
+      let it = this;
+      return {
+        "next": () => {
+          if (it.has) {
+            const value = it.value;
+            it = it.next;
+            return {"done": false, value};
+          }
+          return {"done": true};
+        }
+      };
+    };
   }
 
   /**
@@ -228,7 +241,7 @@ export default class It {
    * @return {boolean} Result
    */
   every (f) {
-    for (const e of this.to()) if (!f(e)) return false;
+    for (const e of this) if (!f(e)) return false;
     return true;
   }
 
@@ -239,7 +252,7 @@ export default class It {
    * @return {boolean} Result
    */
   some (f) {
-    for (const e of this.to()) if (f(e)) return true;
+    for (const e of this) if (f(e)) return true;
     return false;
   }
 
@@ -259,7 +272,7 @@ export default class It {
    * @return {T|undefined} Result
    */
   find (f) {
-    for (const e of this.to()) if (f(e)) return e;
+    for (const e of this) if (f(e)) return e;
     return undefined;
   }
 
@@ -271,7 +284,7 @@ export default class It {
    */
   findLast (f) {
     let r = undefined;
-    for (const e of this.to()) if (f(e)) r = e;
+    for (const e of this) if (f(e)) r = e;
     return r;
   }
 
@@ -281,7 +294,7 @@ export default class It {
   count () {
     let c = 0;
     // eslint-disable-next-line
-    for (const e of this.to()) ++c;
+    for (const e of this) ++c;
     return c;
   }
 
@@ -293,7 +306,7 @@ export default class It {
    */
   indexf (f) {
     let c = 0;
-    for (const e of this.to()) {
+    for (const e of this) {
       if (f(e)) return c;
       ++c;
     }
@@ -319,7 +332,7 @@ export default class It {
   lastIndexf (f) {
     let c = 0;
     let r = -1;
-    for (const e of this.to()) {
+    for (const e of this) {
       if (f(e)) r = c;
       ++c;
     }
@@ -342,7 +355,7 @@ export default class It {
    */
   each (f) {
     let i = 0;
-    for (const e of this.to()) f(e, i++);
+    for (const e of this) f(e, i++);
   }
 
   /**
@@ -354,7 +367,7 @@ export default class It {
    * @return {R} The final value
    */
   reduce (seed, f) {
-    for (const e of this.to()) seed = f(seed, e);
+    for (const e of this) seed = f(seed, e);
     return seed;
   }
 
@@ -364,7 +377,7 @@ export default class It {
    * @return {!It<T>} A new It.
    */
   reverse () {
-    return It.from([...this.to()].reverse());
+    return It.from([...this].reverse());
   }
 
   /**
@@ -375,7 +388,7 @@ export default class It {
    * @return {!It<T>} A new It.
    */
   sort (f) {
-    return It.from([...this.to()].sort(f));
+    return It.from([...this].sort(f));
   }
 
   /**
@@ -384,27 +397,9 @@ export default class It {
    * @return {!It<T>} A new It
    */
   shuffle () {
-    const a = [...this.to()];
+    const a = [...this];
     Rbox.shuffle(a);
     return It.from(a);
-  }
-
-  to () {
-    let it = this;
-    const itJs = {};
-    itJs[Symbol.iterator] = () => {
-      return {
-        "next": () => {
-          if (it.has) {
-            const value = it.value;
-            it = it.next;
-            return {"done": false, value};
-          }
-          return {"done": true};
-        }
-      };
-    };
-    return itJs;
   }
 
   /** @return {string} A representation of 'this' */
@@ -487,7 +482,7 @@ export default class It {
     if (!i.has) return "";
     sep = sep || "";
     let r = i.value;
-    for (const o of i.next.to()) {
+    for (const o of i.next) {
       r += sep + o;
     }
     return r;
