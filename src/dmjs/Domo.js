@@ -12,7 +12,7 @@ export default class Domo {
   }
 
   /** @return {*} Element wrapped */
-  e () {
+  get e () {
     return this._e;
   }
 

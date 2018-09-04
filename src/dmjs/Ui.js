@@ -188,9 +188,9 @@ export default class Ui {
       evt.dataTransfer.dropEffect = "copy";
     };
 
-    o.e().addEventListener("dragover", handleDragOver, false);
+    o.e.addEventListener("dragover", handleDragOver, false);
 
-    o.e().addEventListener(
+    o.e.addEventListener(
       "dragleave",
       () => {
         o.style(style);
@@ -205,7 +205,7 @@ export default class Ui {
       action(evt.dataTransfer.files);
     };
 
-    o.e().addEventListener("drop", handleDrop, false);
+    o.e.addEventListener("drop", handleDrop, false);
 
     return o;
   }
@@ -216,7 +216,7 @@ export default class Ui {
    * @return {!Domo} The same object 'input'
    */
   static changePoint (input) {
-    const el = input.e();
+    const el = input.e;
     el.onkeydown = e => {
       if (e.keyCode === 110) {
         const start = el.selectionStart;
@@ -262,7 +262,7 @@ export default class Ui {
       .on("keydown", e => {
         if (e.keyCode === 13) {
           e.preventDefault();
-          Ui.$("#" + targetId).e().focus();
+          Ui.$("#" + targetId).e.focus();
         }
       });
   }
@@ -277,7 +277,7 @@ export default class Ui {
       .on("keydown", e => {
         if (e.keyCode === 13) {
           e.preventDefault();
-          Ui.$("#" + targetId).e().focus();
+          Ui.$("#" + targetId).e.focus();
         }
       });
   }
@@ -315,7 +315,7 @@ export default class Ui {
       op.text(tx)
         .att("name", idPrefix)
         .att("id", idPrefix + "_" + tx);
-      r.e().add(op.e());
+      r.e.add(op.e);
     });
     return r;
   }

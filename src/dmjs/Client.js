@@ -194,7 +194,7 @@ export default class Client {
           }
         } catch (e) {
           //eslint-disable-next-line
-          console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:${e}`);
+          console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:\n${e}`);
         }
       }
     );
@@ -229,7 +229,7 @@ export default class Client {
           }
         } catch (e) {
           //eslint-disable-next-line
-          console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:${e}`);
+          console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:\n${e}`);
         }
       }
     );
@@ -266,7 +266,7 @@ export default class Client {
             }
           } catch (e2) {
             //eslint-disable-next-line
-            console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:${e}`);
+            console.log(`RAW SERVER RESPONSE:\n${rp}\nCLIENT ERROR:\n${e}`);
           }
         }
       }
