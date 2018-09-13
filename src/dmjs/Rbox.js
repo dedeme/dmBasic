@@ -6,7 +6,7 @@ import Rnd from "./Rnd.js";
 import Tp from "./Tp.js";
 
 /**
- * Random Box
+ * Random Box.
  * @template T
  */
 export default class Rbox {

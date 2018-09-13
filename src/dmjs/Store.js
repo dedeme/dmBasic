@@ -4,7 +4,7 @@
 
 import It from "./It.js";
 
-/** Wrapper for HTML5 Store */
+/** Wrapper for HTML5 Store. */
 export default class Store {
 
   /**

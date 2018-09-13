@@ -1,7 +1,7 @@
 // Copyright 1-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/// Immutable tuple of two elemens
+/** Immutable tuples of two elemens. */
 
 /** @template A, B */
 export default class Tp {

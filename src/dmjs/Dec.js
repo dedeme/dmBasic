@@ -1,7 +1,7 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/// Some mathematical functions, rounding and numeric formats
+/** Some mathematical functions, rounding and numeric formats */
 
 /**
  * Gives format to number.
@@ -31,7 +31,7 @@ const format = (d, thousand, decimal) => {
   return ((d._sign === 1) ? "" : "-") + left + right;
 };
 
-/// Some mathematical functions, rounding and numeric formats
+/** Some mathematical functions, rounding and numeric formats */
 export default class Dec {
   /**
    * @param {number=} value A float value. Default 0.

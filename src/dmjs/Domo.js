@@ -3,7 +3,7 @@
 
 import It from "./It.js";
 
-/** Class for envelopping DOM objects */
+/** Class for envelopping DOM objects. */
 export default class Domo {
   /** @param {*} e  Param*/
   constructor (e) {
@@ -21,8 +21,8 @@ export default class Domo {
    * @return {?} Result
    */
   html (tx) {
-    if (tx === undefined) return this._e.innerHTML/**/;
-    this._e.innerHTML/**/ = tx;
+    if (tx === undefined) return this._e.innerHTML;
+    this._e.innerHTML = tx;
     return this;
   }
 
@@ -31,8 +31,8 @@ export default class Domo {
    * @return {?} Result
    */
   text (tx) {
-    if (tx === undefined) return this._e.textContent/**/;
-    this._e.textContent/**/ = tx;
+    if (tx === undefined) return this._e.textContent;
+    this._e.textContent = tx;
     return this;
   }
 
@@ -41,8 +41,8 @@ export default class Domo {
    * @return {?} Result
    */
   klass (tx) {
-    if (tx === undefined) return this._e.className/**/;
-    this._e.className/**/ = tx;
+    if (tx === undefined) return this._e.className;
+    this._e.className = tx;
     return this;
   }
 
@@ -82,8 +82,8 @@ export default class Domo {
    * @return {?} Result
    */
   disabled (value) {
-    if (value === undefined) return this._e.disabled/**/;
-    this._e.disabled/**/ = value;
+    if (value === undefined) return this._e.disabled;
+    this._e.disabled = value;
     return this;
   }
 
@@ -92,8 +92,8 @@ export default class Domo {
    * @return {?} Result
    */
   checked (value) {
-    if (value === undefined) return this._e.checked/**/;
-    this._e.checked/**/ = value;
+    if (value === undefined) return this._e.checked;
+    this._e.checked = value;
     return this;
   }
 
@@ -102,8 +102,8 @@ export default class Domo {
    * @return {?} Result
    */
   value (v) {
-    if (v === undefined) return this._e.value/**/;
-    this._e.value/**/ = v;
+    if (v === undefined) return this._e.value;
+    this._e.value = v;
     return this;
   }
 
@@ -144,7 +144,7 @@ export default class Domo {
    * @return {!Domo} Result
    */
   removeAll () {
-    this._e.innerHTML/**/ = "";
+    this._e.innerHTML = "";
     return this;
   }
 

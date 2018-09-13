@@ -1,7 +1,7 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/** Date management */
+/** Date management. */
 let months = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
   "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
@@ -92,8 +92,8 @@ export default class DateDm {
   }
 
   /**
-   * Returns a string that represents to [this]. <p>
-   * [template] is a kind <tt>printf</tt> with next sustitution
+   * Returns a string that represents to [this].
+   * [template] is a kind 'printf' with next sustitution
    * variables:
    *   %d  Day in number 06 -> 6
    *   %D  Day with tow digits 06 -> 06

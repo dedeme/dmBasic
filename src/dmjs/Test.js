@@ -1,7 +1,7 @@
 // Copyright 1-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/// Utility to test code
+/** Utility to test code. */
 
 export default class Test {
   /** @param {string} fname Test name*/

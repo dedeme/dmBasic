@@ -12,7 +12,7 @@
  *
  *   2.- NORMAL COMMUNICATION: Client send data with sessionId
  *
- *   *.- AUTHENTICATION: Client send user, password and persisitent.
+ *   3.- AUTHENTICATION: Client send user, password and persisitent.
  *     * Wrong -> AUTHENTICATION
  *     * RIGHT -> Returns sessionId, pageId, communicationKey and user level
  *
@@ -141,12 +141,13 @@ export default class Client {
 
   /**
    * @private
+   * @param {boolean} asynch If connection is asynchronic.
    * @param {string} rq data to send in B64
    * @param {function (string):void} f Action to do. The string of 'f' is
    *        B64 codified.
    * @return {void}
    */
-  sendServer (rq, f) {
+  sendServer (asynch, rq, f) {
     const self = this;
 
     const request = new XMLHttpRequest();
@@ -156,7 +157,7 @@ export default class Client {
         f(request.responseText.trim());
       }
     };
-    if (self._lock) {
+    if (self._lock && !asynch) {
       return;
     }
     self._lock = true;
@@ -179,6 +180,7 @@ export default class Client {
   connect (f) {
     const self = this;
     self.sendServer(
+      false,
       self.sessionId(),
       rp => {
         try {
@@ -213,6 +215,7 @@ export default class Client {
     const p = Client.crypPass(pass);
     const exp = expiration ? "1" : "0";
     self.sendServer(
+      false,
       ":" + Cryp.cryp(key, `${user}:${p}:${exp}`),
       rp => {
         try {
@@ -239,15 +242,17 @@ export default class Client {
    * @private
    * @param {!Object<string, ?>} data Param
    * @param {function (!Object<string, ?>):void} f Function
+   * @param {boolean} asynch If connection is asynchronic.
    * @param {boolean} withConnectionId Param
    * @return {void}
    */
-  _send (data, f, withConnectionId) {
+  _send (data, f, asynch, withConnectionId) {
     const self = this;
     if (withConnectionId) {
       data["connectionId"] = self._connectionId;
     }
     self.sendServer(
+      asynch,
       self.sessionId() + ":" + Cryp.cryp(self.key(), JSON.stringify(data)),
       rp => {
         try {
@@ -280,17 +285,28 @@ export default class Client {
    * @return {void}
    */
   send0 (data, f) {
-    this._send(data, f, false);
+    this._send(data, f, false, false);
   }
 
   /**
-   * [send] checks if connectionId is correct,
+   * [send] checks if connectionId is correct.
    * @param {!Object<string, ?>} data Param
    * @param {function (!Object<string, ?>):void} f Function
    * @return {void}
    */
   send (data, f) {
-    this._send(data, f, true);
+    this._send(data, f, false, true);
+  }
+
+  /**
+   * [sendAsync] sends asynchronically 'data' and does not check if
+   * connectionId is correct.
+   * @param {!Object<string, ?>} data Param
+   * @param {function (!Object<string, ?>):void} f Function
+   * @return {void}
+   */
+  sendAsync (data, f) {
+    this._send(data, f, true, false);
   }
 
   /**

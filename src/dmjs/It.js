@@ -3,7 +3,7 @@
 
 /* eslint consistent-this: "off" */
 
-/** Lazy iterator */
+/** Lazy iterator. */
 
 import Rbox from "./Rbox.js";
 import Tp from "./Tp.js";

@@ -1,15 +1,17 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
+/** User interface resources. */
+
 import It from "./It.js";
 import Domo from "./Domo.js";
 
 /**
- * @private
  * @type !Array<string>
  */
 const scripts = [];
 
+/** User interface resources. */
 export default class Ui {
 
   /**
@@ -54,16 +56,14 @@ export default class Ui {
   }
 
   /**
-   * <p>Extracts variables of URL. Returns a map with next rules:<p>
-   * <ul>
-   * <li>Expresions 'key = value' are changed in {"key" : "value"}</li>
-   * <li>Expresion only with value are changes by {"its-order-number" "value"}.
-   *   (order-number is zero based)</li>
-   * </ul>
-   * <p>Example:</p>
-   * <p><tt>foo.com/bar?v1&k1=v2&v3 -> {"0" : v1, "k1" : v2, "2" : v3}</tt></p>
-   * <p>NOTE: <i>keys and values are not trimized.</i></p>
-   * <p>NOTE: <i>If there is no variable, return is an empty object</i></p>
+   * Extracts variables of URL. Returns a map with next rules:
+   *    -Expresions 'key = value' are changed in {"key" : "value"}
+   *    -Expresion only with value are changes by {"its-order-number" "value"}.
+   *      (order-number is zero based)</li>
+   * Example:
+   *    foo.com/bar?v1&k1=v2&v3 -> {"0" : v1, "k1" : v2, "2" : v3}
+   * NOTE: keys and values are not trimized.
+   * NOTE: If there is no variable, return is an empty object.
    * @return {!Object<string, string>} Result
    */
   static url () {
@@ -117,7 +117,7 @@ export default class Ui {
   /**
    * Loads dynamically several javascript or css files. (they can go mixed).
    * @param {!Array<string>} paths Array with complete paths, including
-   *  .js or .css extension.
+   *        .js or .css extension.
    * @param {function ()} action Action after loading
    * @return {void}
    */
@@ -168,9 +168,9 @@ export default class Ui {
   }
 
   /**
-   * Management of Drag and Drop of files over an object.<p>
-   * NOTE: <i>For accessing to single files use <tt>fileList.item(n)</tt>. You
-   * can know the file number of files with <tt>fileList.length</tt>.</i>
+   * Management of Drag and Drop of files over an object.
+   * NOTE: For accessing to single files use 'fileList.item(n)'. You
+   *       can know the file number of files with 'fileList.length'.
    * @param {!Domo} o Object over which is going to make Drag
    *        and Drop.
    * @param {function (!FileList)} action Action to make with files.

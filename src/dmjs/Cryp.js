@@ -1,7 +1,7 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/// Cryptographic functions
+/** Cryptographic functions. */
 
 import B64 from "./B64.js";
 
