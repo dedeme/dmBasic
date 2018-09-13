@@ -34,7 +34,7 @@ export default class It {
           if (it.has) {
             const value = it.value;
             it = it.next;
-            return {"done": false, value};
+            return {"done": false, "value": value};
           }
           return {"done": true};
         }
