@@ -56,10 +56,17 @@ const Klen = 300;
 /** Class for AJAX communications */
 export default class Client {
   /**
+   * @param {boolean} isDmCgi If is 'true' server is accessed through 'dmcgi'
    * @param {string} appName Used to customize LocalStore
    * @param {function ():void} fexpired Function to launch expired page
    */
-  constructor (appName, fexpired) {
+  constructor (isDmCgi, appName, fexpired) {
+    /**
+     * @private
+     * @const {boolean}
+     */
+    this._isDmCgi = isDmCgi;
+
     /**
      * @private
      * @const {string}
@@ -170,7 +177,7 @@ export default class Client {
 
       request.open(
         "POST",
-        "http://" + location.host + "/cgi-bin/ccgi.sh",
+        "http://" + location.host + (self._isDmCgi ? "/cgi-bin/ccgi.sh" : ""),
         true
       );
       request.setRequestHeader(
