@@ -234,18 +234,21 @@ export default class Ui {
 
   /**
    * Creates a image with border='0'.
-   * @param {string} id : Image name without extension ('.png' will be used).
-   *        It must be placed in a directory named 'img'.
+   * @param {string} id Image name. If it has not extension, '.png' will be
+   *        used. It must be placed in a directory named 'img'.
    * @return {!Domo} Result
    */
   static img (id) {
-    return Ui.$("img").att("src", "img/" + id + ".png");
+    if (id.indexOf(".") === -1) {
+      id = id + ".png";
+    }
+    return Ui.$("img").att("src", "img/" + id);
   }
 
   /**
    * Creates a image with border='0' and a 'opacity:0.4'.
-   * @param {string} id : Image name without extension ('.png' will be used).
-   *        It must be placed in a directory named 'img'.
+   * @param {string} id : Image name. If it has not extension, '.png' will be
+   *        used. It must be placed in a directory named 'img'.
    * @return {!Domo} Result
    */
   static lightImg (id) {
@@ -333,6 +336,18 @@ export default class Ui {
     setTimeout(() => {
       o.stop(0);
     }, 80);
+  }
+
+  /**
+   * Shows a image to scroll to top
+   * @param {string} img Image name. If it has not extension, '.png' will be
+   *        used. It must be placed in a directory named 'img'.
+   * @return {!Domo}
+   */
+  static upTop (img) {
+    return Ui.$("div").style("position: fixed;bottom: 0px;right: 20px")
+      .add(Ui.link(() => location.assign("#"))
+        .add(Ui.img(img)));
   }
 
   /**

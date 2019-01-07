@@ -359,6 +359,21 @@ export default class It {
   }
 
   /**
+   * Executes synchronically 'frecursive' for each value of 'this' and then
+   * executes 'fend'.
+   * @param {function(T):!Promise<?>} frecursive
+   * @param {function():void} fend
+   */
+  async eachSync (frecursive, fend) {
+    if (this.has) {
+      await frecursive(this.value);
+      this.next.eachSync(frecursive, fend);
+    } else {
+      fend();
+    }
+  }
+
+  /**
    * Returns the result of applying [f]([f]([seed], e1), e2)... over
    * every element of [this].
    * @template R
