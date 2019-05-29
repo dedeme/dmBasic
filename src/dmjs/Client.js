@@ -276,6 +276,70 @@ export default class Client {
     return this._send(data, true);
   }
 
+  /** @private */
+  async longRun (isRq, data) {
+    let rp = null;
+
+    data["longRunFile"] = "";
+    if (isRq) {
+      rp = await this.rq(data);
+    } else {
+      rp = await this.send(data);
+    }
+    data["longRunFile"] = rp["longRunFile"];
+    return new Promise((resolve) => {
+      let counter = 0;
+      const longRunInterval = setInterval(async () => {
+        if (isRq) {
+          rp = await this.rq(data);
+        } else {
+          rp = await this.send(data);
+        }
+        const longRunEnd = rp["longRunEnd"];
+        if (longRunEnd || counter > 60) {
+          clearInterval(longRunInterval);
+          resolve(rp);
+        } else {
+          ++counter;
+        }
+      }, 1000);
+    });
+  }
+
+  /**
+   * Request to server a "long run" task.
+   * Does not check if connectionId is correct.
+   * Process:
+   *    Client: Adds a string field called "longRunFile" set to "" and send 'rq'
+   *    Server: Launch the task in thread apart and return "longRunFile" with
+   *            the path of a file which will contain a response.
+   *    Client: Set "longRunFile" with the value returned by server and send
+   *            'rq' every second until server indicates the end of the task or
+   *            it passes 1 minute.
+   *    Server: Adds to response a field called "longRunEnd" set to 'true' if
+   *            the task is finished or 'false' otherwise.
+   * @param {!Object<string, ?>} data
+   * @return {!Promise<!Object<string, ?>>} Object contains a added field called
+   *         "longRunEnd" set to 'true' if the task was finished or 'false'
+   *         otherwise.
+   */
+  rqLongRun (data) {
+    return this.longRun(true, data);
+  }
+
+  /**
+   * Sends to server a "long run" task.
+   * Checks if connectionId is correct.
+   * Process: See 'rqLongRun()'
+   * @param {!Object<string, ?>} data
+   * @return {!Promise<!Object<string, ?>>} Object contains a added field called
+   *         "longRunEnd" set to 'true' if the task was finished or 'false'
+   *         otherwise.
+   */
+  sendLongRun (data) {
+    return this.longRun(false, data);
+  }
+
   /**
    * Processing of user password before sending it to server.
    * @param {string} pass Param
