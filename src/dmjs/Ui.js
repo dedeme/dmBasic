@@ -351,6 +351,19 @@ export default class Ui {
   }
 
   /**
+   * Circle with a color.
+   * @param {string} color Like "#d0ddde" or "rgb(245, 245, 248)"
+   * @return {!Domo}
+   */
+  static led (color) {
+    return Ui.$("div")
+      .style("padding:5px;" +
+         "border: 1px solid #002040;border-radius: 6px;" +
+         "background: " + color + ";")
+    ;
+  }
+
+  /**
    * Returns x position of mouse in browser window
    * @param {!MouseEvent} evt Param
    * @return {number} Result
