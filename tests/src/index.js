@@ -7,6 +7,7 @@ import DecTest from "./DecTest.js";
 import TpTest from "./TpTest.js";
 import RndTest from "./RndTest.js";
 import ItTest from "./ItTest.js";
+import DateDmTest from "./DateDmTest.js";
 
 export function main () {
   B64Test.run();
@@ -15,6 +16,7 @@ export function main () {
   TpTest.run();
   RndTest.run();
   ItTest.run();
+  DateDmTest.run();
 }
 
 window["main"] = main;
