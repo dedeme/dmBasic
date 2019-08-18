@@ -41,10 +41,7 @@ export default class Dec {
       @param {number=} value A float value. Default 0.
       @param {number=} scale Number of decimal positions. Default 0.
   **/
-  constructor (value, scale) {
-    value = value || 0;
-    scale = scale || 0;
-
+  constructor (value = 0, scale = 0) {
     /**
         @private
     **/

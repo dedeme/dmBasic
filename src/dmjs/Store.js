@@ -19,7 +19,7 @@ export default class Store {
 
   /**
       Removes the key [key]  of local storage.
-      @param {string} key Param.
+      @param {string} key
       @return {void}
   **/
   static del (key) {
@@ -45,7 +45,7 @@ export default class Store {
   /**
       Returns the value of key [key] or <b>null</b> if it does not exists
       of local storage.
-      @param {string} key Param.
+      @param {string} key
       @return {?string} Result
   **/
   static take (key) {
@@ -55,8 +55,8 @@ export default class Store {
 
   /**
       Returns the key in position [ix] of local storage.
-      @param {number} ix Param.
-      @return {?string} Result.
+      @param {number} ix
+      @return {?string}
   **/
   static key (ix) {
     return window.localStorage.key(ix);
@@ -64,7 +64,7 @@ export default class Store {
 
   /**
       Returns a It with all keys of local storage.
-      @return {!It<string>} Result.
+      @return {!It<string>}
   **/
   static keys () {
     const sz = Store.size();
@@ -79,8 +79,8 @@ export default class Store {
 
   /**
       Puts a new value in local storage.
-      @param {string} key Param.
-      @param {string} value Param.
+      @param {string} key
+      @param {string} value
       @return {void}
   **/
   static put (key, value) {
@@ -89,7 +89,7 @@ export default class Store {
 
   /**
       Returns the number of elements of local storage.
-      @return {number} Result.
+      @return {number}
   **/
   static size () {
     return window.localStorage.length;
@@ -97,7 +97,7 @@ export default class Store {
 
   /**
       Returns a It with all values of local storage.
-      @return {!It<string>} Result.
+      @return {!It<string>}
   **/
   static values () {
     return Store.keys().map(e => Store.take(e));
@@ -113,7 +113,7 @@ export default class Store {
 
   /**
       Removes the key [key]  of session storage.
-      @param {string} key Param.
+      @param {string} key
       @return {void}
   **/
   static sessionDel (key) {
@@ -123,8 +123,8 @@ export default class Store {
   /**
       Returns the value of key [key] or <b>null</b> if it does not exists
       of session storage.
-      @param {string} key Param.
-      @return {?string} Result.
+      @param {string} key
+      @return {?string}
   **/
   static sessionTake (key) {
     const r = window.sessionStorage.getItem(key);
@@ -133,8 +133,8 @@ export default class Store {
 
   /**
       Returns the key in position [ix] of session storage.
-      @param {number} ix Param.
-      @return {?string} Result.
+      @param {number} ix
+      @return {?string}
   **/
   static sessionKey (ix) {
     return window.sessionStorage.key(ix);
@@ -142,7 +142,7 @@ export default class Store {
 
   /**
       Returns a It with all keys of session storage.
-      @return {!It<string>} Result.
+      @return {!It<string>}
   **/
   static sessionKeys () {
     const sz = Store.size();
@@ -157,8 +157,8 @@ export default class Store {
 
   /**
       Puts a new value in session storage.
-      @param {string} key Param.
-      @param {string} value Param.
+      @param {string} key
+      @param {string} value
       @return {void}
   **/
   static sessionPut (key, value) {
@@ -167,7 +167,7 @@ export default class Store {
 
   /**
       Returns the number of elements of session storage.
-      @return {number} Result.
+      @return {number}
   **/
   static sessionSize () {
     return window.sessionStorage.length;
@@ -175,7 +175,7 @@ export default class Store {
 
   /**
       Returns a It with all values of session storage.
-      @return {!It<string>} Result.
+      @return {!It<string>}
   **/
   static sessionValues () {
     return Store.sessionKeys().map(e => Store.sessionTake(e));

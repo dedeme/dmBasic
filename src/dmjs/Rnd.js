@@ -26,8 +26,7 @@ export default class Rnd {
                       value is 0.
       @return {!Dec} Result.
   **/
-  static dec (n1, n2, scale) {
-    scale = scale || 0;
+  static dec (n1, n2, scale = 0) {
     return Dec.rnd(new Dec(n1, scale), new Dec(n2, scale));
   }
 

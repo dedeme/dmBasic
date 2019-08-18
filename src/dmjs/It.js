@@ -171,7 +171,7 @@ export default class It {
   /**
       Returns the n first elements of 'it' whish give false with 'f'.
       @param {function (T):boolean} f Condition.
-      @return {!It<T>}  New It.
+      @return {!It<T>} New It.
   **/
   takeUntil (f) {
     return this.takeWhile(e => !f(e));
@@ -180,7 +180,7 @@ export default class It {
   /**
       Returns rest of 'this' after call 'take ()'.
       @param {number} n Number of elements.
-      @return {!It<T>}  New It.
+      @return {!It<T>} New It.
   **/
   drop (n) {
     let i = this;
@@ -194,7 +194,7 @@ export default class It {
   /**
       Returns rest of 'It' after call 'takeWhile()'.
       @param {function (T):boolean} f Condition.
-      @return {!It<T>}  New It.
+      @return {!It<T>} New It.
   **/
   dropWhile (f) {
     let i = this;
@@ -206,7 +206,7 @@ export default class It {
   /**
       Returns rest of It after call 'takeUntil()'.
       @param {function (T):boolean} f Condition.
-      @return {!It<T>}  New It.
+      @return {!It<T>} New It.
   **/
   dropUntil (f) {
     return this.dropWhile(e => !f(e));
@@ -215,7 +215,7 @@ export default class It {
   /**
       Filters 'this', returning a subset of collection.
       @param {function (T):boolean} f Function to select values.
-      @return {!It<T>}  New It.
+      @return {!It<T>} New It.
   **/
   filter (f) {
     const it = this.dropUntil(f);
@@ -231,7 +231,7 @@ export default class It {
       of 'this'.
       @template U
       @param {function (T):U} f Application function.
-      @return {!It<U>}  New It.
+      @return {!It<U>} New It.
   **/
   map (f) {
     return new It(
@@ -244,7 +244,7 @@ export default class It {
   /**
       Tests whether all elements in the array pass the test implemented by 'f'.
       @param {function (T):boolean} f Function to test values.
-      @return {boolean} Result.
+      @return {boolean}
   **/
   every (f) {
     for (const e of this) if (!f(e)) return false;
@@ -255,7 +255,7 @@ export default class It {
       Tests whether at least one element in the array passes the test
       implemented by 'f'.
       @param {function (T):boolean} f Function to test values.
-      @return {boolean} Result.
+      @return {boolean}
   **/
   some (f) {
     for (const e of this) if (f(e)) return true;
@@ -265,7 +265,7 @@ export default class It {
   /**
       Tests whether at least one element in the array is === 'e'.
       @param {T} e Element to search.
-      @return {boolean} Result.
+      @return {boolean}
   **/
   contains (e) {
     return this.some(el => el === e);
@@ -275,7 +275,7 @@ export default class It {
       Returns the value of the first element in It that satisfies 'f'.
       Otherwise 'undefined' is returned.
       @param {function (T):boolean} f Function to test values.
-      @return {T|undefined} Result.
+      @return {T|undefined}
   **/
   find (f) {
     for (const e of this) if (f(e)) return e;
@@ -286,7 +286,7 @@ export default class It {
       Returns the value of the last element in It that satisfies 'f'.
       Otherwise 'undefined' is returned.
       @param {function (T):boolean} f Function to test values.
-      @return {T|undefined} Result.
+      @return {T|undefined}
   **/
   findLast (f) {
     let r = undefined;
@@ -367,8 +367,8 @@ export default class It {
   /**
       Executes synchronically 'frecursive' for each value of 'this' and then
       executes 'fend'.
-      @param {function(T):!Promise<?>} frecursive Param.
-      @param {function():void} fend Param.
+      @param {function(T):!Promise<?>} frecursive
+      @param {function():void} fend
   **/
   async eachSync (frecursive, fend) {
     if (this.has) {
@@ -500,9 +500,8 @@ export default class It {
       @param {string=} sep Separator.
       @return {string} Result.
   **/
-  static join (i, sep) {
+  static join (i, sep = "") {
     if (!i.has) return "";
-    sep = sep || "";
     let r = i.value;
     for (const o of i.next) {
       r += sep + o;
@@ -545,7 +544,7 @@ export default class It {
       @template B
       @param {!It<A>} i1 Iterator to zip.
       @param {!It<B>} i2 Iterator to zip.
-      @return {!It<!Tp<A, B>>} Result.
+      @return {!It<!Tp<A, B>>}
   **/
   static zip (i1, i2) {
     return new It(
@@ -564,7 +563,7 @@ export default class It {
       @param {!It<A>} i1 Iterator to zip.
       @param {!It<B>} i2 Iterator to zip.
       @param {!It<C>} i3 Iterator to zip.
-      @return {!It<!Tp3<A, B, C>>} Result.
+      @return {!It<!Tp3<A, B, C>>}
   **/
   static zip3 (i1, i2, i3) {
     return new It(

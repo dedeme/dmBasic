@@ -17,8 +17,8 @@ export default class Ui {
          - If 's' starts with '@', returns a querySelector.
            (e.g. $("@myTable") or $("@.example").
          - Otherwise creates the indicated object (e.g. Q("table")).
-      @param {string} s Param.
-      @return {!Domo} Result.
+      @param {string} s
+      @return {!Domo}
   **/
   static $ (s) {
     if (s === "") {
@@ -37,7 +37,7 @@ export default class Ui {
          - if 's' is of form "%xxx" returns elements with name "xxx".
          - if 's' is of form ".xxx" returns elements of class 'xxx'.
          - if 's' is of form "xxx" returns elements with tag name 'xxx'.
-      @param {string} s Param.
+      @param {string} s
       @return {!Array<!Domo>}
   **/
   static $$ (s) {
@@ -80,8 +80,8 @@ export default class Ui {
 
   /**
       Loads dynamically a javascript or css file.
-      @param {string} path Param.
-      @param {function ()} action Param.
+      @param {string} path
+      @param {function ()} action
       @return {void}
   **/
   static load (path, action) {
@@ -149,8 +149,8 @@ export default class Ui {
 
   /**
       Allows user to download a text in a file called 'fileName'.
-      @param {string} fileName Param.
-      @param {string} text Param.
+      @param {string} fileName
+      @param {string} text
       @return {void}
   **/
   static download (fileName, text) {
@@ -174,8 +174,7 @@ export default class Ui {
              'rgb(240, 245, 250)'.
       @return {!Domo} The same object 'o'.
   **/
-  static ifiles (o, action, back) {
-    back = back || "rgb(240, 245, 250)";
+  static ifiles (o, action, back = "rgb(240, 245, 250)") {
     const style = /** @type {string} */ (o.style());
     const handleDragOver = evt => {
       o.style(style + `;background-color: ${back} ;`);
@@ -352,7 +351,7 @@ export default class Ui {
 
   /**
       Returns x position of mouse in browser window.
-      @param {!MouseEvent} evt Param.
+      @param {!MouseEvent} evt
       @return {number}
   **/
   static winX (evt) {
@@ -364,7 +363,7 @@ export default class Ui {
 
   /**
       Returns y position of mouse in browser window.
-      @param {!MouseEvent} evt Param.
+      @param {!MouseEvent} evt
       @return {number}
   **/
   static winY (evt) {
