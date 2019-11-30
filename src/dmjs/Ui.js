@@ -332,7 +332,7 @@ export default class Ui {
   **/
   static upTop (img) {
     return Ui.$("div").style("position: fixed;bottom: 0px;right: 20px")
-      .add(Ui.link(() => window.scroll(0,0)).add(Ui.img(img)));
+      .add(Ui.link(() => window.scroll(0, 0)).add(Ui.img(img)));
   }
 
   /**
