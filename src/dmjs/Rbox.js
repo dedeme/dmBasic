@@ -6,16 +6,22 @@ import Rnd from "./Rnd.js";
 import Tp from "./Tp.js";
 
 /**
- * Random Box.
- * @template T
- */
+    Random Box.
+    @template T
+**/
 export default class Rbox {
 
-  /** @param {!Array<T>} es Elements of Rbox */
+  /**
+      @param {!Array<T>} es Elements of Rbox.
+  **/
   constructor (es) {
-    /** @private */
+    /**
+        @private
+    **/
     this._es = es;
-    /** @private */
+    /**
+        @private
+    **/
     this._box = Array.from(es);
     Rbox.shuffle(this._box);
 
@@ -29,9 +35,9 @@ export default class Rbox {
   }
 
   /**
-   * Returns next random element.
-   * @return {T} Next element.
-   */
+      Returns next random element.
+      @return {T} Next element.
+  **/
   next () {
     if (this._box.length === 0) {
       this._box = Array.from(this._es);
@@ -41,13 +47,13 @@ export default class Rbox {
   }
 
   /**
-   * Returns a Rbox with repeated elements
-   * @template T
-   * @param {!Array<!Tp<T, number>>} es Description of box elements.
-   *        For example:
-   *        Rbox.mk([("a", 1),("b", 2)]) creates elements "a","b","b".
-   * @return {!Rbox<T>} A new Rbox
-   */
+      Returns a Rbox with repeated elements.
+      @template T
+      @param {!Array<!Tp<T, number>>} es Description of box elements.
+             For example:
+             Rbox.mk([("a", 1),("b", 2)]) creates elements "a","b","b".
+      @return {!Rbox<T>} A new Rbox.
+  **/
   static mk (es) {
     const r = [];
     es.forEach(e => {
@@ -57,18 +63,16 @@ export default class Rbox {
   }
 
   /**
-   * Modifies randomly in place the elements order of 'a'.
-   * @param {!Array<?>} a An array
-   * @return {void}
-   */
+      Modifies randomly in place the elements order of 'a'.
+      @param {!Array<?>} a An array.
+      @return {void}
+  **/
   static shuffle (a) {
     let ix = a.length;
     while (ix > 1) {
       const i = Rnd.i(ix);
       --ix;
-      if (i !== ix) {
-        [a[i], a[ix]] = [a[ix], a[i]];
-      }
+      if (i !== ix) [a[i], a[ix]] = [a[ix], a[i]];
     }
   }
 

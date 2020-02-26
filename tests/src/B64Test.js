@@ -5,6 +5,7 @@ import B64 from "./dmjs/B64.js";
 import Test from "./dmjs/Test.js";
 
 export default class B64Test {
+
   static run () {
     const t = new Test("B64");
     t.eq(B64.encode("Cañónç䍆"), "Q2HDscOzbsOn5I2G");
@@ -18,6 +19,7 @@ export default class B64Test {
 
     t.log();
   }
+
 }
 
 

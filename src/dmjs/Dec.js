@@ -1,23 +1,24 @@
 // Copyright 03-Sep-2017 ºDeme
 // GNU General Public License - V3 <http://www.gnu.org/licenses/>
 
-/** Some mathematical functions, rounding and numeric formats */
+/**
+    Some mathematical functions, rounding and numeric formats.
+**/
 
 /**
- * Gives format to number.
- * @param {!Dec} d Number to fomat
- * @param {string} thousand Sign of thausands
- * @param {string} decimal Sign of decimal part
- * @return {string} The number 'd' formated.
- */
+    Gives format to number.
+    @param {!Dec} d Number to fomat.
+    @param {string} thousand Sign of thausands.
+    @param {string} decimal Sign of decimal part.
+    @return {string} The number 'd' formated.
+**/
 const format = (d, thousand, decimal) => {
   const scale = d._scale;
   let left = String(d._intValue);
   let right = "";
   if (scale > 0) {
-    while (left.length < scale + 1) {
+    while (left.length < scale + 1)
       left = "0" + left;
-    }
     const ix = left.length - scale;
     right = decimal + left.substring(ix);
     left = left.substring(0, ix);
@@ -31,30 +32,39 @@ const format = (d, thousand, decimal) => {
   return ((d._sign === 1) ? "" : "-") + left + right;
 };
 
-/** Some mathematical functions, rounding and numeric formats */
+/**
+    Some mathematical functions, rounding and numeric formats.
+**/
 export default class Dec {
-  /**
-   * @param {number=} value A float value. Default 0.
-   * @param {number=} scale Number of decimal positions. Default 0.
-   */
-  constructor (value, scale) {
-    value = value || 0;
-    scale = scale || 0;
 
-    /** @private */
+  /**
+      @param {number=} value A float value. Default 0.
+      @param {number=} scale Number of decimal positions. Default 0.
+  **/
+  constructor (value = 0, scale = 0) {
+    /**
+        @private
+    **/
     this._value = value;
-    /** @private */
+    /**
+        @private
+    **/
     this._scale = scale;
-    /** @private */
+    /**
+        @private
+    **/
     this._intScale = 1;
-    /** @private */
+    /**
+        @private
+    **/
     this._intValue = 0;
-    /** @private */
+    /**
+        @private
+    **/
     this._sign = 1;
 
-    for (let i = 0; i < scale; ++i) {
+    for (let i = 0; i < scale; ++i)
       this._intScale *= 10;
-    }
 
     if (value < 0) {
       this._intValue = Math.round(-value * this._intScale + 0.000000001);
@@ -67,24 +77,24 @@ export default class Dec {
   }
 
   /**
-   *  @return {number} Value
-   */
+       @return {number} Value.
+  **/
   get value () {
     return this._value;
   }
 
   /**
-   * @return {number} Number of decimal positions.
-   */
+      @return {number} Number of decimal positions.
+  **/
   get scale () {
     return this._scale;
   }
 
   /**
-   * Returns if [this] and [d] have the same value and scale
-   * @param {!Dec} d Another Dec
-   * @return {boolean} "true" if 'd' is equals to 'this'
-   */
+      Returns if 'this' and 'd' have the same value and scale.
+      @param {!Dec} d Another Dec.
+      @return {boolean} "true" if 'd' is equals to 'this'.
+  **/
   eq (d) {
     return this._intValue === d._intValue &&
     this._intScale === d._intScale &&
@@ -92,11 +102,11 @@ export default class Dec {
   }
 
   /**
-   * Returns if [this] and [d] have the same value. (Doesn't pay attention to
-   * their scales)
-   * @param {!Dec} d Another Dec
-   * @return {boolean} "true" if 'd' is equals to 'this'
-   */
+      Returns if 'this' and 'd' have the same value. (Doesn't pay attention to
+      their scales).
+      @param {!Dec} d Another Dec.
+      @return {boolean} "true" if 'd' is equals to 'this'.
+  **/
   eqValue (d) {
     return (this._scale > d._scale)
       ? this.eq(new Dec(d._value, this._scale))
@@ -107,12 +117,12 @@ export default class Dec {
   }
 
   /**
-   * Returns 1, 0 or -1 depending on [this] was greater, equal or lesser than
-   * [d]. (Doesn't take into account their scales)
-   * @param {!Dec} d Another Dec
-   * @return {number} A number >, < or === 0 according to 'this' is >, < or
-   *   === to 'd'
-   */
+      Returns 1, 0 or -1 depending on 'this' was greater, equal or lesser than
+      'd'. (Doesn't take into account their scales).
+      @param {!Dec} d Another Dec.
+      @return {number} A number >, < or === 0 according to 'this' is >, < or
+        === to 'd'.
+  **/
   compare (d) {
     return (this._scale > d._scale)
       ? this.compare(new Dec(d._value, this._scale))
@@ -123,25 +133,25 @@ export default class Dec {
   }
 
   /**
-   * European format, with point of thousand and decimal comma.
-   * @return {string} 'this' in 'european' format
-   */
-  toEu () {
+      European format, with point of thousand and decimal comma.
+      @return {string} 'this' in 'ISO' format.
+  **/
+  toIso () {
     return format(this, ".", ",");
   }
 
   /**
-   * English format, with comma of thousand  and decimal point.
-   * @return {string} 'this' in 'english' format
-   */
+      English format, with comma of thousand  and decimal point.
+      @return {string} 'this' in 'english' format.
+  **/
   toEn () {
     return format(this, ",", ".");
   }
 
   /**
-   * Return [this] in base format.
-   * @return {string} 'this' in 'base' format
-   */
+      Return 'this' in base format.
+      @return {string} 'this' in 'base' format.
+  **/
   toString () {
     let r = String(this._intValue);
     if (this._scale > 0) {
@@ -152,112 +162,112 @@ export default class Dec {
     return (this._sign === 1) ? r : "-" + r;
   }
 
-  /** @return {!Array<?>} Serialization of 'this' */
-  serialize () {
+  /**
+      @return {!Array<?>} Serialization of 'this'.
+  **/
+  toJs () {
     return [this._value, this._scale];
   }
 
   /**
-   * [s] must be in base format.
-   * @param {string} s A string.
-   * @return {boolean} 'true' if s is a number.
-   */
+      's' must be in base format.
+      @param {string} s A string.
+      @return {boolean} 'true' if s is a number.
+  **/
   static isNumber (s) {
     return !isNaN(s) && s !== "";
   }
 
   /**
-   * Test if [s] is in English format
-   * @param {string} s A string.
-   * @return {boolean} 'true' if s is a number.
-   */
+      Test if 's' is in English format.
+      @param {string} s A string.
+      @return {boolean} 'true' if s is a number.
+  **/
   static isNumberEn (s) {
     return Dec.isNumber(s.split(",").join(""));
   }
 
   /**
-   * Test if [s] is in European format
-   * @param {string} s A string.
-   * @return {boolean} 'true' if s is a number.
-   */
-  static isNumberEu (s) {
-    return Dec.isNumber(
-      s.split(".").join("").split(",").join(".")
-    );
+      Test if 's' is in European format
+      @param {string} s A string.
+      @return {boolean} 'true' if s is a number.
+  **/
+  static isNumberIso (s) {
+    return Dec.isNumber(s.split(".").join("").split(",").join("."));
   }
 
   /**
-   * Returns 's' (base format) converted to Float o null if 's' is not a
-   * number
-   * @param {string} s A string.
-   * @return {number | null} A number of null
-   */
+      Returns 's' (base format) converted to Float o null if 's' is not a
+      number.
+      @param {string} s A string.
+      @return {number | null} A number of null.
+  **/
   static toFloat (s) {
     return Dec.isNumber(s) ? parseFloat(s) : null;
   }
 
   /**
-   * Returns 's' (English format) converted to Float o null if 's' is not a
-   * number
-   * @param {string} s A string.
-   * @return {number | null} A number of null
-   */
+      Returns 's' (English format) converted to Float o null if 's' is not a
+      number.
+      @param {string} s A string.
+      @return {number | null} A number of null.
+  **/
   static toFloatEn (s) {
     s = s.split(",").join("");
     return Dec.isNumber(s) ? parseFloat(s) : null;
   }
 
   /**
-   * Returns 's' (base format) converted to Float o null if 's' is not a
-   * number
-   * @param {string} s A string.
-   * @return {number | null} A number of null
-   */
-  static toFloatEu (s) {
+      Returns 's' (Iso format) converted to Float o null if 's' is not a
+      number.
+      @param {string} s A string.
+      @return {number | null} A number of null.
+  **/
+  static toFloatIso (s) {
     s = s.split(".").join("").split(",").join(".");
     return Dec.isNumber(s) ? parseFloat(s) : null;
   }
 
   /**
-   * [s] must be in English format.
-   * @param {string} s A string
-   * @param {number} scale Number of decimals
-   * @return {!Dec} A new Dec
-   */
+      's' must be in English format.
+      @param {string} s A string.
+      @param {number} scale Number of decimals.
+      @return {!Dec} A new Dec.
+  **/
   static newEn (s, scale) {
     return new Dec(parseFloat(s.split(",").join("")), scale);
   }
 
   /**
-   * [s] must be in European format.
-   * @param {string} s  A string
-   * @param {number} scale Number of decimals
-   * @return {!Dec} A new Dec
-   */
-  static newEu (s, scale) {
+      's' must be in ISO format.
+      @param {string} s  A string.
+      @param {number} scale Number of decimals.
+      @return {!Dec} A new Dec.
+  **/
+  static newIso (s, scale) {
     return new Dec(parseFloat(
       s.split(".").join("").split(",").join(".")
     ), scale);
   }
 
   /**
-   * [s] must be in base format.
-   * @param {string} s  A string
-   * @param {number} scale Number of decimals
-   * @return {!Dec} A new Dec
-   */
+      's' must be in base format.
+      @param {string} s  A string.
+      @param {number} scale Number of decimals.
+      @return {!Dec} A new Dec.
+  **/
   static newStr (s, scale) {
     return new Dec(parseFloat(s), scale);
   }
 
   /**
-   * Returns a random integer between [n1] included and [n2] included. [n1]
-   * can be upper or lower than n2.<p>
-   * Result has a scale equals to the Dec with it greater.
-   * @param {!Dec} n1 A number
-   * @param {!Dec} n2 Other number
-   * @return {!Dec} A new Dec
-   */
+      Returns a random integer between 'n1' included and 'n2' included. 'n1'
+      can be upper or lower than n2.
+      Result has a scale equals to the Dec with it greater.
+      @param {!Dec} n1 A number.
+      @param {!Dec} n2 Other number.
+      @return {!Dec} A new Dec.
+  **/
   static rnd (n1, n2) {
     const sc = (n1._scale > n2._scale) ? n1._scale : n2._scale;
     const dif = n2._value - n1._value;
@@ -265,10 +275,10 @@ export default class Dec {
   }
 
   /**
-   * @param {!Array<?>} serial A serializacion of Dec
-   * @return {!Dec} A new Dec
-   */
-  static restore (serial) {
+      @param {!Array<?>} serial A serializacion of Dec.
+      @return {!Dec} A new Dec.
+  **/
+  static fromJs (serial) {
     return new Dec(serial[0], serial[1]);
   }
 

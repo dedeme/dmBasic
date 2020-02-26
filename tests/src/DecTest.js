@@ -29,10 +29,10 @@ export default class DecTest {
     t.eq(new Dec(0.09, 1).value, 0.1);
     t.eq(new Dec(1.27499, 2).value, 1.27);
     t.eq(new Dec(3216234125.124, 2).value, 3216234125.12);
-    t.eq(new Dec(3216234125.124, 2).toEu(), "3.216.234.125,12");
+    t.eq(new Dec(3216234125.124, 2).toIso(), "3.216.234.125,12");
 
     t.eq(new Dec().toString(), "0");
-    t.eq(new Dec().toEu(), "0");
+    t.eq(new Dec().toIso(), "0");
 
     t.eq(new Dec(-3.25499, 2).toString(), "-3.25");
     t.eq(new Dec(-16234125.124, 2).toString(), "-16234125.12");
@@ -40,30 +40,30 @@ export default class DecTest {
     t.eq(new Dec(16234125.124, 0).toString(), "16234125");
     t.eq(new Dec(1.345, 2).toString(), "1.35");
 
-    t.eq(new Dec(-3.25499, 2).toEu(), "-3,25");
-    t.eq(new Dec(-16234125.124, 2).toEu(), "-16.234.125,12");
-    t.eq(new Dec(3.25499, 0).toEu(), "3");
-    t.eq(new Dec(16234125.124, 0).toEu(), "16.234.125");
-    t.eq(new Dec(16234125.1, 2).toEu(), "16.234.125,10");
-    t.eq(new Dec(16234125, 2).toEu(), "16.234.125,00");
+    t.eq(new Dec(-3.25499, 2).toIso(), "-3,25");
+    t.eq(new Dec(-16234125.124, 2).toIso(), "-16.234.125,12");
+    t.eq(new Dec(3.25499, 0).toIso(), "3");
+    t.eq(new Dec(16234125.124, 0).toIso(), "16.234.125");
+    t.eq(new Dec(16234125.1, 2).toIso(), "16.234.125,10");
+    t.eq(new Dec(16234125, 2).toIso(), "16.234.125,00");
 
     t.eq(Dec.newStr("-3.25499", 2).value, -3.25);
     t.eq(Dec.newStr("-16234125.124", 2).value, -16234125.12);
     t.eq(Dec.newStr("3.25499", 0).value, 3);
     t.eq(Dec.newStr("16234125.124", 0).value, 16234125);
     t.eq(
-      new Dec(new Dec(25713.54, 2).value / new Dec(0.007509, 8).value, 2).toEu(),
+      new Dec(new Dec(25713.54, 2).value / new Dec(0.007509, 8).value, 2).toIso(),
       "3.424.362,76"
     );
 
     t.eq(Dec.newStr(".0", 2).value, 0);
-    t.eq(Dec.newEu(",0", 2).value, 0);
+    t.eq(Dec.newIso(",0", 2).value, 0);
     t.eq(Dec.newStr("-3.25499", 2).value, -3.25);
-    t.eq(Dec.newEu("-16.234.125,124", 2).value, -16234125.12);
+    t.eq(Dec.newIso("-16.234.125,124", 2).value, -16234125.12);
     t.eq(Dec.newStr("3.25499", 0).value, 3);
-    t.eq(Dec.newEu("16.234.125,124", 0).value, 16234125);
-    t.eq(Dec.newEu("16.234.125,10", 2).value, 16234125.1);
-    t.eq(Dec.newEu("16.234.125,00", 2).value, 16234125);
+    t.eq(Dec.newIso("16.234.125,124", 0).value, 16234125);
+    t.eq(Dec.newIso("16.234.125,10", 2).value, 16234125.1);
+    t.eq(Dec.newIso("16.234.125,00", 2).value, 16234125);
 
     t.eq(Dec.newEn("-3.25499", 2).value, -3.25);
     t.eq(Dec.newEn("-16,234,125.124", 2).value, -16234125.12);
@@ -75,23 +75,23 @@ export default class DecTest {
     t.yes(!Dec.isNumber("dd"));
     t.yes(!Dec.isNumber(""));
 
-    t.yes(new Dec().eq(Dec.restore(new Dec().serialize())));
-    t.yes(new Dec(.0).eq(Dec.restore(new Dec(.0).serialize())));
-    t.yes(new Dec(-0).eq(Dec.restore(new Dec(-0).serialize())));
+    t.yes(new Dec().eq(Dec.fromJs(new Dec().toJs())));
+    t.yes(new Dec(.0).eq(Dec.fromJs(new Dec(.0).toJs())));
+    t.yes(new Dec(-0).eq(Dec.fromJs(new Dec(-0).toJs())));
     t.yes(new Dec(-3.25, 2).eq(
-      Dec.restore(new Dec(-3.25, 2).serialize())
+      Dec.fromJs(new Dec(-3.25, 2).toJs())
     ));
     t.yes(new Dec(3.25).eq(
-      Dec.restore(new Dec(3.25).serialize())
+      Dec.fromJs(new Dec(3.25).toJs())
     ));
     t.yes(new Dec(-16234125.12, 2).eq(
-      Dec.restore(new Dec(-16234125.12, 2).serialize())
+      Dec.fromJs(new Dec(-16234125.12, 2).toJs())
     ));
     t.yes(new Dec(16234125.12, 2).eq(
-      Dec.restore(new Dec(16234125.12, 2).serialize())
+      Dec.fromJs(new Dec(16234125.12, 2).toJs())
     ));
     t.yes(new Dec(-16234125.12).eq(
-      Dec.restore(new Dec(-16234125.12).serialize())
+      Dec.fromJs(new Dec(-16234125.12).toJs())
     ));
 
     t.mark("Old"); // ----------------------------------------
@@ -146,31 +146,31 @@ export default class DecTest {
     t.eq(new Dec(3.112, 0).toString(), "3");
     t.eq(new Dec(3.115, 0).toString(), "3");
 
-    t.eq(new Dec(0, 0).toEu(), "0");
-    t.eq(new Dec(-0, 0).toEu(), "0");
-    t.eq(new Dec(0, 2).toEu(), "0,00");
-    t.eq(new Dec(-0, 2).toEu(), "0,00");
-    t.eq(new Dec(0.1, 2).toEu(), "0,10");
-    t.eq(new Dec(-0.1, 2).toEu(), "-0,10");
-    t.eq(new Dec(0.1, 0).toEu(), "0");
-    t.eq(new Dec(-0.1, 0).toEu(), "0");
-    t.eq(new Dec(3.112, 2).toEu(), "3,11");
-    t.eq(new Dec(-3.115, 2).toEu(), "-3,12");
-    t.eq(new Dec(3.112, 0).toEu(), "3");
-    t.eq(new Dec(3.115, 0).toEu(), "3");
-    t.eq(new Dec(12233.112, 2).toEu(), "12.233,11");
-    t.eq(new Dec(-12233.115, 2).toEu(), "-12.233,12");
-    t.eq(new Dec(345112233.112, 0).toEu()
+    t.eq(new Dec(0, 0).toIso(), "0");
+    t.eq(new Dec(-0, 0).toIso(), "0");
+    t.eq(new Dec(0, 2).toIso(), "0,00");
+    t.eq(new Dec(-0, 2).toIso(), "0,00");
+    t.eq(new Dec(0.1, 2).toIso(), "0,10");
+    t.eq(new Dec(-0.1, 2).toIso(), "-0,10");
+    t.eq(new Dec(0.1, 0).toIso(), "0");
+    t.eq(new Dec(-0.1, 0).toIso(), "0");
+    t.eq(new Dec(3.112, 2).toIso(), "3,11");
+    t.eq(new Dec(-3.115, 2).toIso(), "-3,12");
+    t.eq(new Dec(3.112, 0).toIso(), "3");
+    t.eq(new Dec(3.115, 0).toIso(), "3");
+    t.eq(new Dec(12233.112, 2).toIso(), "12.233,11");
+    t.eq(new Dec(-12233.115, 2).toIso(), "-12.233,12");
+    t.eq(new Dec(345112233.112, 0).toIso()
       , "345.112.233");
-    t.eq(new Dec(345112233.115, 0).toEu()
+    t.eq(new Dec(345112233.115, 0).toIso()
       , "345.112.233");
-    t.eq(new Dec(5112233.112, 2).toEu()
+    t.eq(new Dec(5112233.112, 2).toIso()
       , "5.112.233,11");
-    t.eq(new Dec(-5112233.115, 2).toEu()
+    t.eq(new Dec(-5112233.115, 2).toIso()
       , "-5.112.233,12");
-    t.eq(new Dec(345112233.112, 0).toEu()
+    t.eq(new Dec(345112233.112, 0).toIso()
       , "345.112.233");
-    t.eq(new Dec(345112233.115, 0).toEu()
+    t.eq(new Dec(345112233.115, 0).toIso()
       , "345.112.233");
 
     t.eq(new Dec(0, 0).toEn(), "0");
@@ -274,90 +274,90 @@ export default class DecTest {
 
     t.eq(Dec.toFloat("+0"), 0);
     t.eq(Dec.toFloat("3 ."), null);
-    t.eq(Dec.toFloatEu("+210.512,01234"), 210512.01234);
+    t.eq(Dec.toFloatIso("+210.512,01234"), 210512.01234);
     t.eq(Dec.toFloat("210.512,012.34"), null);
     t.eq(Dec.toFloatEn("+210,512.01234"), 210512.01234);
     t.eq(Dec.toFloat("210,512.012,34"), null);
 
-    t.eq(Dec.newStr("0", 0).toEu(), "0");
-    t.eq(Dec.newStr("-0", 0).toEu(), "0");
-    t.eq(Dec.newStr("0", 2).toEu(), "0,00");
-    t.eq(Dec.newStr("-0", 2).toEu(), "0,00");
-    t.eq(Dec.newStr("0.1", 2).toEu(), "0,10");
-    t.eq(Dec.newStr("-0.1", 2).toEu(), "-0,10");
-    t.eq(Dec.newStr("0.1", 0).toEu(), "0");
-    t.eq(Dec.newStr("-0.1", 0).toEu(), "0");
-    t.eq(Dec.newStr("3.112", 2).toEu(), "3,11");
-    t.eq(Dec.newStr("-3.115", 2).toEu(), "-3,12");
-    t.eq(Dec.newStr("3.112", 0).toEu(), "3");
-    t.eq(Dec.newStr("3.115", 0).toEu(), "3");
-    t.eq(Dec.newStr("12233.112", 2).toEu(), "12.233,11");
-    t.eq(Dec.newStr("-12233.115", 2).toEu(), "-12.233,12");
-    t.eq(Dec.newStr("00345112233.112", 0).toEu()
+    t.eq(Dec.newStr("0", 0).toIso(), "0");
+    t.eq(Dec.newStr("-0", 0).toIso(), "0");
+    t.eq(Dec.newStr("0", 2).toIso(), "0,00");
+    t.eq(Dec.newStr("-0", 2).toIso(), "0,00");
+    t.eq(Dec.newStr("0.1", 2).toIso(), "0,10");
+    t.eq(Dec.newStr("-0.1", 2).toIso(), "-0,10");
+    t.eq(Dec.newStr("0.1", 0).toIso(), "0");
+    t.eq(Dec.newStr("-0.1", 0).toIso(), "0");
+    t.eq(Dec.newStr("3.112", 2).toIso(), "3,11");
+    t.eq(Dec.newStr("-3.115", 2).toIso(), "-3,12");
+    t.eq(Dec.newStr("3.112", 0).toIso(), "3");
+    t.eq(Dec.newStr("3.115", 0).toIso(), "3");
+    t.eq(Dec.newStr("12233.112", 2).toIso(), "12.233,11");
+    t.eq(Dec.newStr("-12233.115", 2).toIso(), "-12.233,12");
+    t.eq(Dec.newStr("00345112233.112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newStr("00345112233.115", 0).toEu()
+    t.eq(Dec.newStr("00345112233.115", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newStr("005112233.112", 2).toEu()
+    t.eq(Dec.newStr("005112233.112", 2).toIso()
       , "5.112.233,11");
-    t.eq(Dec.newStr("-005112233.115", 2).toEu()
+    t.eq(Dec.newStr("-005112233.115", 2).toIso()
       , "-5.112.233,12");
-    t.eq(Dec.newStr("00345112233.112", 0).toEu()
+    t.eq(Dec.newStr("00345112233.112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newStr("00345112233.115", 0).toEu()
+    t.eq(Dec.newStr("00345112233.115", 0).toIso()
       , "345.112.233");
 
-    t.eq(Dec.newEn("0", 0).toEu(), "0");
-    t.eq(Dec.newEn("-0", 0).toEu(), "0");
-    t.eq(Dec.newEn("0", 2).toEu(), "0,00");
-    t.eq(Dec.newEn("-0", 2).toEu(), "0,00");
-    t.eq(Dec.newEn("0.1", 2).toEu(), "0,10");
-    t.eq(Dec.newEn("-0.1", 2).toEu(), "-0,10");
-    t.eq(Dec.newEn("0.1", 0).toEu(), "0");
-    t.eq(Dec.newEn("-0.1", 0).toEu(), "0");
-    t.eq(Dec.newEn("3.112", 2).toEu(), "3,11");
-    t.eq(Dec.newEn("-3.115", 2).toEu(), "-3,12");
-    t.eq(Dec.newEn("3.112", 0).toEu(), "3");
-    t.eq(Dec.newEn("3.115", 0).toEu(), "3");
-    t.eq(Dec.newEn("12,233.112", 2).toEu(), "12.233,11");
-    t.eq(Dec.newEn("-12,233.115", 2).toEu(), "-12.233,12");
-    t.eq(Dec.newEn("00,345,112,233.112", 0).toEu()
+    t.eq(Dec.newEn("0", 0).toIso(), "0");
+    t.eq(Dec.newEn("-0", 0).toIso(), "0");
+    t.eq(Dec.newEn("0", 2).toIso(), "0,00");
+    t.eq(Dec.newEn("-0", 2).toIso(), "0,00");
+    t.eq(Dec.newEn("0.1", 2).toIso(), "0,10");
+    t.eq(Dec.newEn("-0.1", 2).toIso(), "-0,10");
+    t.eq(Dec.newEn("0.1", 0).toIso(), "0");
+    t.eq(Dec.newEn("-0.1", 0).toIso(), "0");
+    t.eq(Dec.newEn("3.112", 2).toIso(), "3,11");
+    t.eq(Dec.newEn("-3.115", 2).toIso(), "-3,12");
+    t.eq(Dec.newEn("3.112", 0).toIso(), "3");
+    t.eq(Dec.newEn("3.115", 0).toIso(), "3");
+    t.eq(Dec.newEn("12,233.112", 2).toIso(), "12.233,11");
+    t.eq(Dec.newEn("-12,233.115", 2).toIso(), "-12.233,12");
+    t.eq(Dec.newEn("00,345,112,233.112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEn("00345,112,233.115", 0).toEu()
+    t.eq(Dec.newEn("00345,112,233.115", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEn("005,112,233.112", 2).toEu()
+    t.eq(Dec.newEn("005,112,233.112", 2).toIso()
       , "5.112.233,11");
-    t.eq(Dec.newEn("-005,112,233.115", 2).toEu()
+    t.eq(Dec.newEn("-005,112,233.115", 2).toIso()
       , "-5.112.233,12");
-    t.eq(Dec.newEn("00345112,233.112", 0).toEu()
+    t.eq(Dec.newEn("00345112,233.112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEn("003,451,,12,233.115", 0).toEu()
+    t.eq(Dec.newEn("003,451,,12,233.115", 0).toIso()
       , "345.112.233");
 
-    t.eq(Dec.newEu("0", 0).toEu(), "0");
-    t.eq(Dec.newEu("-0", 0).toEu(), "0");
-    t.eq(Dec.newEu("0", 2).toEu(), "0,00");
-    t.eq(Dec.newEu("-0", 2).toEu(), "0,00");
-    t.eq(Dec.newEu("0,1", 2).toEu(), "0,10");
-    t.eq(Dec.newEu("-0,1", 2).toEu(), "-0,10");
-    t.eq(Dec.newEu("0,1", 0).toEu(), "0");
-    t.eq(Dec.newEu("-0,1", 0).toEu(), "0");
-    t.eq(Dec.newEu("3,112", 2).toEu(), "3,11");
-    t.eq(Dec.newEu("-3,115", 2).toEu(), "-3,12");
-    t.eq(Dec.newEu("3,112", 0).toEu(), "3");
-    t.eq(Dec.newEu("3,115", 0).toEu(), "3");
-    t.eq(Dec.newEu("12.233,112", 2).toEu(), "12.233,11");
-    t.eq(Dec.newEu("-12.233,115", 2).toEu(), "-12.233,12");
-    t.eq(Dec.newEu("00.345.112.233,112", 0).toEu()
+    t.eq(Dec.newIso("0", 0).toIso(), "0");
+    t.eq(Dec.newIso("-0", 0).toIso(), "0");
+    t.eq(Dec.newIso("0", 2).toIso(), "0,00");
+    t.eq(Dec.newIso("-0", 2).toIso(), "0,00");
+    t.eq(Dec.newIso("0,1", 2).toIso(), "0,10");
+    t.eq(Dec.newIso("-0,1", 2).toIso(), "-0,10");
+    t.eq(Dec.newIso("0,1", 0).toIso(), "0");
+    t.eq(Dec.newIso("-0,1", 0).toIso(), "0");
+    t.eq(Dec.newIso("3,112", 2).toIso(), "3,11");
+    t.eq(Dec.newIso("-3,115", 2).toIso(), "-3,12");
+    t.eq(Dec.newIso("3,112", 0).toIso(), "3");
+    t.eq(Dec.newIso("3,115", 0).toIso(), "3");
+    t.eq(Dec.newIso("12.233,112", 2).toIso(), "12.233,11");
+    t.eq(Dec.newIso("-12.233,115", 2).toIso(), "-12.233,12");
+    t.eq(Dec.newIso("00.345.112.233,112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEu("00345.112.233,115", 0).toEu()
+    t.eq(Dec.newIso("00345.112.233,115", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEu("005.112.233,112", 2).toEu()
+    t.eq(Dec.newIso("005.112.233,112", 2).toIso()
       , "5.112.233,11");
-    t.eq(Dec.newEu("-005.112.233,115", 2).toEu()
+    t.eq(Dec.newIso("-005.112.233,115", 2).toIso()
       , "-5.112.233,12");
-    t.eq(Dec.newEu("00345112.233,112", 0).toEu()
+    t.eq(Dec.newIso("00345112.233,112", 0).toIso()
       , "345.112.233");
-    t.eq(Dec.newEu("003.451..12.233,115", 0).toEu()
+    t.eq(Dec.newIso("003.451..12.233,115", 0).toIso()
       , "345.112.233");
 
     t.log();

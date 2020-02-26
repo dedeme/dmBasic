@@ -3,23 +3,32 @@
 
 import It from "./It.js";
 
-/** Class for envelopping DOM objects. */
+/**
+    Class for envelopping DOM objects.
+**/
 export default class Domo {
-  /** @param {*} e  Param*/
+
+  /**
+      @param {*} e  Html element.
+  **/
   constructor (e) {
-    /** @private */
+    /**
+        @private
+    **/
     this._e = e;
   }
 
-  /** @return {*} Element wrapped */
+  /**
+      @return {*} Html element wrapped.
+  **/
   get e () {
     return this._e;
   }
 
   /**
-   * @param {string=} tx Param
-   * @return {?} Result
-   */
+      @param {string=} tx
+      @return {?}
+  **/
   html (tx) {
     if (tx === undefined) return this._e.innerHTML;
     this._e.innerHTML = tx;
@@ -27,9 +36,9 @@ export default class Domo {
   }
 
   /**
-   * @param {string=} tx Param
-   * @return {?} Result
-   */
+      @param {string=} tx
+      @return {?}
+  **/
   text (tx) {
     if (tx === undefined) return this._e.textContent;
     this._e.textContent = tx;
@@ -37,9 +46,9 @@ export default class Domo {
   }
 
   /**
-   * @param {string=} tx Param
-   * @return {?} Result
-   */
+      @param {string=} tx
+      @return {?}
+  **/
   klass (tx) {
     if (tx === undefined) return this._e.className;
     this._e.className = tx;
@@ -47,9 +56,9 @@ export default class Domo {
   }
 
   /**
-   * @param {string=} s Param
-   * @return {?} Result
-   */
+      @param {string=} s
+      @return {?}
+  **/
   style (s) {
     if (s === undefined) return this._e.getAttribute("style");
     this._e.setAttribute("style", s);
@@ -57,20 +66,20 @@ export default class Domo {
   }
 
   /**
-   * @param {string} key Style key
-   * @param {string} value Style value
-   * @return {!Domo} Result
-   */
+      @param {string} key Style key.
+      @param {string} value Style value.
+      @return {!Domo} .
+  **/
   setStyle (key, value) {
     this._e.style[key] = value;
     return this;
   }
 
   /**
-   * @param {string} key Param
-   * @param {?=} value Param
-   * @return {?} Result
-   */
+      @param {string} key
+      @param {?=} value
+      @return {?}
+  **/
   att (key, value) {
     if (value === undefined) return this._e.getAttribute(key);
     this._e.setAttribute(key, value);
@@ -78,9 +87,9 @@ export default class Domo {
   }
 
   /**
-   * @param {boolean=} value Param
-   * @return {?} Result
-   */
+      @param {boolean=} value
+      @return {?}
+  **/
   disabled (value) {
     if (value === undefined) return this._e.disabled;
     this._e.disabled = value;
@@ -88,9 +97,9 @@ export default class Domo {
   }
 
   /**
-   * @param {boolean=} value Param
-   * @return {?} Result
-   */
+      @param {boolean=} value
+      @return {?}
+  **/
   checked (value) {
     if (value === undefined) return this._e.checked;
     this._e.checked = value;
@@ -98,9 +107,9 @@ export default class Domo {
   }
 
   /**
-   * @param {?=} v Param
-   * @return {?} Result
-   */
+      @param {?=} v
+      @return {?}
+  **/
   value (v) {
     if (v === undefined) return this._e.value;
     this._e.value = v;
@@ -108,20 +117,20 @@ export default class Domo {
   }
 
   /**
-   * Appends a child element.
-   * @param {!Domo} el Param
-   * @return {!Domo} Result
-   */
+      Appends a child element.
+      @param {!Domo} el
+      @return {!Domo}
+  **/
   add (el) {
     this._e.appendChild(el._e);
     return this;
   }
 
   /**
-   * Adds an iterator over elements.
-   * @param {!Array<!Domo>} els Param
-   * @return {!Domo} Result
-   */
+      Adds an iterator over elements.
+      @param {!Array<!Domo>} els
+      @return {!Domo}
+  **/
   adds (els) {
     els.forEach(el => {
       this._e.appendChild(el._e);
@@ -130,28 +139,28 @@ export default class Domo {
   }
 
   /**
-   * Removes a child element.
-   * @param {!Domo} el Param
-   * @return {!Domo} Result
-   */
+      Removes a child element.
+      @param {!Domo} el
+      @return {!Domo}
+  **/
   remove (el) {
     this._e.removeChild(el._e);
     return this;
   }
 
   /**
-   * Removes every child element.
-   * @return {!Domo} Result
-   */
+      Removes every child element.
+      @return {!Domo}
+  **/
   removeAll () {
     this._e.innerHTML = "";
     return this;
   }
 
   /**
-   * Iterator over child elements.
-   * @return {It<!Domo>} Result
-   */
+      Iterator over child elements.
+      @return {It<!Domo>}
+  **/
   get nodes () {
     const it = node =>
       new It(
@@ -163,16 +172,17 @@ export default class Domo {
   }
 
   /**
-   * @param {string} event It can be one of: "blur", "change", "click",
-   *        "dblclick", "focus", "keydown", "keypress", "keyup", "load",
-   *        "mousedown", "mousemove", "mouseout", "mouseover", "mouseup",
-   *        "mouseweel", "select", "selectstart" or "submit".
-   * @param {function (*)} action Function to run
-   * @return {!Domo} Result
-   */
+      @param {string} event It can be one of: "blur", "change", "click",
+             "dblclick", "focus", "keydown", "keypress", "keyup", "load",
+             "mousedown", "mousemove", "mouseout", "mouseover", "mouseup",
+             "mouseweel", "select", "selectstart" or "submit".
+      @param {function (*)} action Function to run.
+      @return {!Domo}
+  **/
   on (event, action) {
     this._e.addEventListener(event, action, false);
     return this;
   }
+
 }
 
