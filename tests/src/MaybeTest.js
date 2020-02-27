@@ -7,7 +7,7 @@ import It from "./dmjs/It.js";
 
 export default class MaybeTest {
   static run () {
-    const t = new Test("Myabe");
+    const t = new Test("Maybe");
 
     const vNothing = Maybe.nothing();
     t.yes(vNothing.isNothing());

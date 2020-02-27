@@ -12,7 +12,7 @@ export default class Maybe {
 
   /**
       @private
-      @param {null | T} e
+      @param {?T} e
   **/
   constructor (e) {
     this._e = e;

@@ -3,19 +3,112 @@
 
 /** Utilities for compatiblity with Haskell. */
 
-import Either from "./Either.js";
+import Either from "./Either.js"; // eslint-disable-line
 
 /**
     @template R
-    @extends {Either<string, R>}
 **/
-export default class Result extends Either {
+export default class Result {
+  /**
+      @private
+      @param {?string} l
+      @param {R} r
+  **/
+  constructor (l, r) {
+    this._l = l;
+    this._r = r;
+  }
 
   /**
-      @return {!Either<string, R>}
+      Returns 'true' if 'this' is a 'Left' value.
+      return {bool}
   **/
-  toEither () {
-    return this;
+  isLeft () {
+    return this._l !== null;
+  }
+
+  /**
+      Returns 'true' if 'this' is a 'Right' value.
+      return {bool}
+  **/
+  isRight () {
+    return this._r !== null;
+  }
+
+  /**
+      Returns the value if 'this' is 'Left' or throw an exception if it is
+      'Right'.
+      @return {string}
+      @throws {string}
+  **/
+  fromLeft () {
+    if (this._l === null) throw new Error("Result.fromLeft: Result is Right");
+    return this._l;
+  }
+
+  /**
+      Returns the value if 'this' is 'Right' or throw an exception if it is
+      'Left'.
+      @return {!R}
+      @throws {string}
+  **/
+  fromRight () {
+    if (this._r === null) throw new Error("Either.fromRight: Either is Left");
+    return this._r;
+  }
+
+  /**
+    Returns the value if 'this' is 'Right' or 'd' if it is 'Left'
+    @param {!R} d
+    @return {!R}
+  **/
+  fromResult (d) {
+    if (this._l === null) return d;
+    return this._r;
+  }
+
+  /**
+      Returns the value if 'this' is 'Right'. Otherwise throws an exception
+      with the value of 'Left'.
+      @return {!R}
+      @throws {string}
+  **/
+  withFail () {
+    if (this._r === null) throw new Error(this._l);
+    return this._r;
+  }
+
+  /**
+      @template U
+      @param {function(!R):!U} fn
+      @return {!Result<U>}
+      @suppress {checkTypes}
+  **/
+  fmap (fn) {
+    if (this._r === null) return Result.left(this._l);
+    return Result.right(fn(this._r));
+  }
+
+  /**
+      @template U
+      @param {!Result<function(!R):!U>} fn
+      @return {!Result<U>}
+      @suppress {checkTypes}
+  **/
+  comp (fn) {
+    if (fn._r === null) return Result.left(fn._l);
+    return this.fmap(fn._r);
+  }
+
+  /**
+      @template U
+      @param {function(!R):!Result<U>} fn
+      @return {!Result<U>}
+      @suppress {checkTypes}
+  **/
+  bind (fn) {
+    if (this._r === null) return Result.left(this._l);
+    return fn(this._r);
   }
 
   /**
@@ -28,7 +121,6 @@ export default class Result extends Either {
   }
 
   /**
-      @template L
       @template R
       @param {string} l
       @return {!Result<R>}
@@ -38,7 +130,6 @@ export default class Result extends Either {
   }
 
   /**
-    @template L
     @template R
     @param {!R} r
     @return {!Result<R>}
@@ -48,10 +139,19 @@ export default class Result extends Either {
   }
 
   /**
+      @return {!Either<string, R>}
+      @suppress {checkTypes}
+  **/
+  toEither () {
+    return this;
+  }
+
+  /**
       @template R
       Simplification.
       @param {!Result<Result<R>>} rs
       @return {!Result<R>}
+      @suppress {checkTypes}
   **/
   static flat (rs) {
     if (rs._r === null) return Result.left(rs._l);
@@ -85,6 +185,7 @@ export default class Result extends Either {
       @template R
       @param {!Iterable<!Result<R>>} it
       @return {!Result<!Array<R>>}
+      @suppress {checkTypes}
   **/
   static fromIterable (it) {
     const r = [];

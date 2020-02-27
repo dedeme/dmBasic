@@ -103,12 +103,12 @@ export default class Client {
   }
 
   /** @return {string} */
-  user () {
+  get user () {
     return this._user;
   }
 
   /** @return {string} */
-  level () {
+  get level () {
     return this._level;
   }
 

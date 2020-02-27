@@ -10,8 +10,8 @@ export default class Either {
 
   /**
       @private
-      @param {L} l
-      @param {R} r
+      @param {?L} l
+      @param {?R} r
   **/
   constructor (l, r) {
     this._l = l;
