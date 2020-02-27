@@ -8,9 +8,10 @@
      ****************
        1.- CONNECT: Client program try to connect with sessionId
          * Wrong -> (communicationKey = "") AUTHENTICATION
-         * Right -> Returns connectionId and communicationKey
+         * Right -> Returns communicationKey, user name and user level
 
-       2.- NORMAL COMMUNICATION: Client send data with sessionId
+       2.- NORMAL COMMUNICATION: Client send data with sessionId and encrypted
+                                 with communicationKey.
 
        3.- AUTHENTICATION: Client send user, password and persisitent.
          * Wrong -> AUTHENTICATION
@@ -18,38 +19,33 @@
 
      *** Client Messages ***
      ***********************
-       AUTHENTICATION: :userName:userKey:[0/1]
-         userName -> in B64.
+       AUTHENTICATION: :userName:userKey:[0/1] (codified with appName)
+         userName -> String.
          userKey -> in Cryp.key.
          [0/1] -> "1" Indicates temporary connection. "0" Indicates permanent.
        CONNECT: sessionId
          sessionId -> As it comes from server.
        NORMAL COMMUNICATION: sessionId:data
          sessionId -> As it comes from server.
-         data -> A pageId field is added. After that it is codified con
-                 Cryp.cryp and communicationKey
-       SET COMMUNICATION: sessionId:connectionId:data
-         sessionId -> As it comes from server.
-         connectionId -> As it comes from connect.
-         data -> A pageId field is added. After that it is codified con
-                 Cryp.cryp and communicationKey
+         data -> Data to send, codified with Cryp.cryp and communicationKey.
 
      *** Server Messages    **
      ***********************
        AUTHENTICATION: Data.key, Data.sessionId, Data.level
-         Data is codified with the same key which sent user.
+         Data is codified with appName.
          Data.key is a fresh string or "" if connection failed.
          Data.sessionId is a fresh string or "".
-         Data.level "0" for admin and "" if connection failed.
+         Data.level "0" for admin, another value for users and
+                    "" if connection failed.
        CONNECT: Data.key, Data.connectionId
          Data is codified with sessionId.
-         Data.key is a fresh string or "" if connection failed.
-         Data.connectionId is a fresh string or "".
+         Data.key is the communication key or "" if connection failed.
+         Data.user is the user name or "".
+         Data.level "0" for admin, another value for users and
+                    "" if connection failed.
        NORMAL COMMUNICATION: Data.? | Data.expired
-         Data.? is codified with communicationKey.
-         Data.expired is codified with "nosession"
-         Data.? | Data.expired Response fields. If session is expired the only
-                               field returned is 'expired' with value 'true'.
+         Data.? is a response codified with communicationKey.
+         Data.expired with value 'true', codified with "nosession"
 **/
 
 import Store from "./Store.js";
@@ -65,7 +61,7 @@ export default class Client {
   /**
       @param {boolean} isDmCgi If is 'true' server is accessed through 'dmcgi'.
       @param {string} appName Used to customize LocalStore.
-      @param {function ():void} fexpired Function to launch expired page.
+      @param {function ():void} fexpired Function to launch an expired page.
   **/
   constructor (isDmCgi, appName, fexpired) {
     /**
@@ -90,7 +86,30 @@ export default class Client {
         @private
         @type {string}
     **/
-    this._connectionId = "";
+    this._key = B64.encode("0");
+
+    /**
+        @private
+        @type {string}
+    **/
+    this._user = "";
+
+    /**
+        @private
+        @type {string}
+    **/
+    this._level = "";
+
+  }
+
+  /** @return {string} */
+  user () {
+    return this._user;
+  }
+
+  /** @return {string} */
+  level () {
+    return this._level;
   }
 
   /**
@@ -108,30 +127,6 @@ export default class Client {
   **/
   setSessionId (value) {
     Store.put("Client_sessionId_" + this._appName, value);
-  }
-
-  /**
-      @private
-      @return {string}
-  **/
-  key () {
-    return Store.take("Client_key_" + this._appName) || B64.encode("0");
-  }
-
-  /**
-      @private
-      @param {string} value
-      @return {void}
-  **/
-  setKey (value) {
-    Store.put("Client_key_" + this._appName, value);
-  }
-
-  /**
-      @return {string}
-  **/
-  user () {
-    return Store.take("Client_user_" + this._appName) || "";
   }
 
   /**
@@ -173,12 +168,13 @@ export default class Client {
     const rp = await self.sendServer(self.sessionId());
     try {
       const jdata = Cryp.decryp(self.sessionId(), rp);
-      const data = /** @type {!Object<string, ?>} */(JSON.parse(jdata));
+      const data = /** @type {!Object<string, string>} */(JSON.parse(jdata));
       const key = data["key"];
       if (key === "")
         return false;
-      self.setKey(key);
-      self._connectionId = data["connectionId"];
+      self._key = key;
+      self._user = data["user"];
+      self._level = data["level"];
       return true;
     } catch (e) {
       //eslint-disable-next-line
@@ -203,14 +199,14 @@ export default class Client {
     );
     try {
       const jdata = Cryp.decryp(key, rp);
-      const data = /** !Object<string, ?> */(JSON.parse(jdata));
+      const data = /** !Object<string, string> */(JSON.parse(jdata));
       const sessionId = data["sessionId"];
       if (sessionId === "") {
         return false;
       }
-      self.setKey(data["key"]);
-      self.setSessionId(sessionId);
-      Store.put("Client_user_" + self._appName, user);
+      self._key = data["key"];
+      self._user = data["user"];
+      self._level = data["level"];
       return true;
     } catch (e) {
       //eslint-disable-next-line
@@ -220,21 +216,18 @@ export default class Client {
   }
 
   /**
-      @private
+      Sends data to server.
       @param {!Object<string, ?>} data
-      @param {boolean} withConnectionId
       @return {!Promise}
   **/
-  async _send (data, withConnectionId) {
+  async send (data) {
     const self = this;
-    if (withConnectionId)
-      data["connectionId"] = self._connectionId;
     const rp = await self.sendServer(
-      self.sessionId() + ":" + Cryp.cryp(self.key(), JSON.stringify(data))
+      self.sessionId() + ":" + Cryp.cryp(self._key, JSON.stringify(data))
     );
 
     try {
-      const jdata = Cryp.decryp(self.key(), rp);
+      const jdata = Cryp.decryp(self._key, rp);
       const data = /** @type {!Object<string, ?>} */(JSON.parse(jdata));
       return data;
     } catch (e) {
@@ -256,57 +249,7 @@ export default class Client {
   }
 
   /**
-      'rq' does not check if connectionId is correct.
-      @param {!Object<string, ?>} data
-      @return {!Promise}
-  **/
-  rq (data) {
-    return this._send(data, false);
-  }
-
-  /**
-      'send' checks if connectionId is correct.
-      @param {!Object<string, ?>} data
-      @return {!Promise}
-  **/
-  send (data) {
-    return this._send(data, true);
-  }
-
-  /**
-      @private
-      @param {boolean} isRq
-      @param {!Object<string, ?>} data
-  **/
-  async longRun (isRq, data) {
-    let rp = null;
-
-    data["longRunFile"] = "";
-
-    if (isRq) rp = await this.rq(data);
-    else rp = await this.send(data);
-
-    data["longRunFile"] = rp["longRunFile"];
-    return new Promise((resolve) => {
-      let counter = 0;
-      const longRunInterval = setInterval(async () => {
-        if (isRq) rp = await this.rq(data);
-        else rp = await this.send(data);
-
-        const longRunEnd = rp["longRunEnd"];
-        if (longRunEnd || counter > 60) {
-          clearInterval(longRunInterval);
-          resolve(rp);
-        } else {
-          ++counter;
-        }
-      }, 1000);
-    });
-  }
-
-  /**
       Request to server a "long run" task.
-      Does not check if connectionId is correct.
       Process:
          Client: Adds a string field called "longRunFile" set to "" and send
                 'rq'.
@@ -322,21 +265,25 @@ export default class Client {
               called "longRunEnd" set to 'true' if the task was finished or
               'false' otherwise.
   **/
-  rqLongRun (data) {
-    return this.longRun(true, data);
-  }
+  async longRun (data) {
+    data["longRunFile"] = "";
+    let rp = await this.send(data);
 
-  /**
-      Sends to server a "long run" task.
-      Checks if connectionId is correct.
-      Process: See 'rqLongRun()'.
-      @param {!Object<string, ?>} data
-      @return {!Promise<!Object<string, ?>>} Object contains a added field
-              called "longRunEnd" set to 'true' if the task was finished or
-              'false' otherwise.
-  **/
-  sendLongRun (data) {
-    return this.longRun(false, data);
+    data["longRunFile"] = rp["longRunFile"];
+    return new Promise((resolve) => {
+      let counter = 0;
+      const longRunInterval = setInterval(async () => {
+        rp = await this.send(data);
+
+        const longRunEnd = rp["longRunEnd"];
+        if (longRunEnd || counter > 60) {
+          clearInterval(longRunInterval);
+          resolve(rp);
+        } else {
+          ++counter;
+        }
+      }, 1000);
+    });
   }
 
   /**
