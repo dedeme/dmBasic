@@ -11,12 +11,12 @@ import Either from "./Either.js"; // eslint-disable-line
 export default class Result {
   /**
       @private
-      @param {?string} l
-      @param {R} r
+      @param {boolean} isR
+      @param {string|R} val
   **/
-  constructor (l, r) {
-    this._l = l;
-    this._r = r;
+  constructor (isR, val) {
+    this._isR = isR;
+    this._val = val;
   }
 
   /**
@@ -24,7 +24,7 @@ export default class Result {
       return {bool}
   **/
   isLeft () {
-    return this._l !== null;
+    return !this._isR;
   }
 
   /**
@@ -32,7 +32,7 @@ export default class Result {
       return {bool}
   **/
   isRight () {
-    return this._r !== null;
+    return this._isR;
   }
 
   /**
@@ -42,8 +42,8 @@ export default class Result {
       @throws {string}
   **/
   fromLeft () {
-    if (this._l === null) throw new Error("Result.fromLeft: Result is Right");
-    return this._l;
+    if (this._isR) throw new Error("Result.fromLeft: Either is Right");
+    return this._val;
   }
 
   /**
@@ -53,8 +53,8 @@ export default class Result {
       @throws {string}
   **/
   fromRight () {
-    if (this._r === null) throw new Error("Either.fromRight: Either is Left");
-    return this._r;
+    if (!this._isR) throw new Error("Result.fromRight: Either is Left");
+    return this._val;
   }
 
   /**
@@ -63,8 +63,8 @@ export default class Result {
     @return {!R}
   **/
   fromResult (d) {
-    if (this._l === null) return d;
-    return this._r;
+    if (this._isR) return this._val;
+    return d;
   }
 
   /**
@@ -74,8 +74,8 @@ export default class Result {
       @throws {string}
   **/
   withFail () {
-    if (this._r === null) throw new Error(this._l);
-    return this._r;
+    if (this._isR) return this._val;
+    throw new Error(this._val);
   }
 
   /**
@@ -85,8 +85,8 @@ export default class Result {
       @suppress {checkTypes}
   **/
   fmap (fn) {
-    if (this._r === null) return Result.left(this._l);
-    return Result.right(fn(this._r));
+    if (this._isR) return Result.right(fn(this._val));
+    return this;
   }
 
   /**
@@ -96,8 +96,8 @@ export default class Result {
       @suppress {checkTypes}
   **/
   comp (fn) {
-    if (fn._r === null) return Result.left(fn._l);
-    return this.fmap(fn._r);
+    if (fn._isR) return this.fmap(fn._val);
+    return this;
   }
 
   /**
@@ -107,8 +107,8 @@ export default class Result {
       @suppress {checkTypes}
   **/
   bind (fn) {
-    if (this._r === null) return Result.left(this._l);
-    return fn(this._r);
+    if (this._isR) return fn(this._val);
+    return this;
   }
 
   /**
@@ -116,8 +116,7 @@ export default class Result {
       @return {!Array<?>} Serialization of 'this'.
   **/
   toJs (fnR) {
-    if (this._r === null) return [false, this._l];
-    return [true].concat(fnR(this._r));
+    return [this._isR, this._isR ? fnR(this._val) : [this._val]];
   }
 
   /**
@@ -126,7 +125,7 @@ export default class Result {
       @return {!Result<R>}
   **/
   static left (l) {
-    return new Result(l, null);
+    return new Result(false, l);
   }
 
   /**
@@ -135,7 +134,7 @@ export default class Result {
     @return {!Result<R>}
   **/
   static right (r) {
-    return new Result(null, r);
+    return new Result(true, r);
   }
 
   /**
@@ -149,13 +148,13 @@ export default class Result {
   /**
       @template R
       Simplification.
-      @param {!Result<Result<R>>} rs
+      @param {!Result<!Result<R>>} rs
       @return {!Result<R>}
       @suppress {checkTypes}
   **/
   static flat (rs) {
-    if (rs._r === null) return Result.left(rs._l);
-    return rs._r;
+    if (rs._isR) return rs._val;
+    return Result.left(rs._val);
   }
 
   /**
@@ -190,8 +189,8 @@ export default class Result {
   static fromIterable (it) {
     const r = [];
     for (const e of it)
-      if (e._r === null) return Result.left(e._l);
-      else r.push(e._r);
+      if (e._isR) r.push(e._val);
+      else return Result.left(e._val);
     return Result.right(r);
   }
 

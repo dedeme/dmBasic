@@ -10,12 +10,12 @@ export default class Either {
 
   /**
       @private
-      @param {?L} l
-      @param {?R} r
+      @param {boolean} isR
+      @param {L|R} val
   **/
-  constructor (l, r) {
-    this._l = l;
-    this._r = r;
+  constructor (isR, val) {
+    this._isR = isR;
+    this._val = val;
   }
 
   /**
@@ -23,7 +23,7 @@ export default class Either {
       return {bool}
   **/
   isLeft () {
-    return this._l !== null;
+    return !this._isR;
   }
 
   /**
@@ -31,7 +31,7 @@ export default class Either {
       return {bool}
   **/
   isRight () {
-    return this._r !== null;
+    return this._isR;
   }
 
   /**
@@ -41,8 +41,8 @@ export default class Either {
       @throws {string}
   **/
   fromLeft () {
-    if (this._l === null) throw new Error("Either.fromLeft: Either is Right");
-    return this._l;
+    if (this._isR) throw new Error("Either.fromLeft: Either is Right");
+    return this._val;
   }
 
   /**
@@ -52,8 +52,8 @@ export default class Either {
       @throws {string}
   **/
   fromRight () {
-    if (this._r === null) throw new Error("Either.fromRight: Either is Left");
-    return this._r;
+    if (!this._isR) throw new Error("Either.fromRight: Either is Left");
+    return this._val;
   }
 
   /**
@@ -62,8 +62,8 @@ export default class Either {
     @return {!R}
   **/
   fromEither (d) {
-    if (this._l === null) return d;
-    return this._r;
+    if (this._isR) return this._val;
+    return d;
   }
 
   /**
@@ -73,8 +73,8 @@ export default class Either {
       @throws {!L}
   **/
   withFail () {
-    if (this._r === null) throw new Error(this._l);
-    return this._r;
+    if (this._isR) return this._val;
+    throw new Error(this._val);
   }
 
   /**
@@ -83,8 +83,8 @@ export default class Either {
       @return {!Either<L, U>}
   **/
   fmap (fn) {
-    if (this._r === null) return Either.left(this._l);
-    return Either.right(fn(this._r));
+    if (this._isR) return Either.right(fn(this._val));
+    return Either.left(this._val);
   }
 
   /**
@@ -93,8 +93,8 @@ export default class Either {
       @return {!Either<L, U>}
   **/
   comp (fn) {
-    if (fn._r === null) return Either.left(fn._l);
-    return this.fmap(fn._r);
+    if (fn._isR) return this.fmap(fn._val);
+    return Either.left(fn._val);
   }
 
   /**
@@ -103,8 +103,8 @@ export default class Either {
       @return {!Either<L, U>}
   **/
   bind (fn) {
-    if (this._r === null) return Either.left(this._l);
-    return fn(this._r);
+    if (this._isR) return fn(this._val);
+    return Either.left(this._val);
   }
 
   /**
@@ -113,8 +113,7 @@ export default class Either {
       @return {!Array<?>} Serialization of 'this'.
   **/
   toJs (fnL, fnR) {
-    if (this._r === null) return [false].concat(fnL(this._l));
-    return [true].concat(fnR(this._r));
+    return [this._isR, this._isR ? fnR(this._val) : fnL(this._val)];
   }
 
   /**
@@ -124,7 +123,7 @@ export default class Either {
       @return {!Either<L, R>}
   **/
   static left (l) {
-    return new Either(l, null);
+    return new Either(false, l);
   }
 
   /**
@@ -134,7 +133,7 @@ export default class Either {
     @return {!Either<L, R>}
   **/
   static right (r) {
-    return new Either(null, r);
+    return new Either(true, r);
   }
 
   /**
@@ -145,8 +144,8 @@ export default class Either {
       @return {!Either<L, R>}
   **/
   static flat (ei) {
-    if (ei._r === null) return Either.left(ei._l);
-    return ei._r;
+    if (ei._isR) return ei._val;
+    return Either.left(ei._val);
   }
 
   /**
@@ -171,8 +170,8 @@ export default class Either {
   static fromIterable (it) {
     const r = [];
     for (const e of it)
-      if (e._r === null) return Either.left(e._l);
-      else r.push(e._r);
+      if (e._isR) r.push(e._val);
+      else return Either.left(e._val);
     return Either.right(r);
   }
 
