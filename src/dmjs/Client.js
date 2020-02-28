@@ -52,7 +52,7 @@ import Store from "./Store.js";
 import Cryp from "./Cryp.js";
 import B64 from "./B64.js";
 
-const Klen = 300;
+const klen = 300;
 
 /**
   Class for AJAX communications.
@@ -191,7 +191,7 @@ export default class Client {
   **/
   async authentication (user, pass, expiration) {
     const self = this;
-    const key = Cryp.key(self._appName, Klen);
+    const key = Cryp.key(self._appName, klen);
     const p = Client.crypPass(pass);
     const exp = expiration ? "1" : "0";
     const rp = await self.sendServer(
@@ -204,6 +204,7 @@ export default class Client {
       if (sessionId === "") {
         return false;
       }
+      self.setSessionId(sessionId);
       self._key = data["key"];
       self._user = data["user"];
       self._level = data["level"];
@@ -292,7 +293,7 @@ export default class Client {
       @return {string}
   **/
   static crypPass (pass) {
-    return Cryp.key(pass, Klen);
+    return Cryp.key(pass, klen);
   }
 
 }
