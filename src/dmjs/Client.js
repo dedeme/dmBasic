@@ -113,7 +113,6 @@ export default class Client {
   }
 
   /**
-      @private
       @return {string}
   **/
   sessionId () {
