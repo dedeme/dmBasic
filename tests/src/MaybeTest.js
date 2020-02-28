@@ -9,7 +9,7 @@ export default class MaybeTest {
   static run () {
     const t = new Test("Maybe");
 
-    const vNothing = Maybe.nothing();
+    const vNothing = Maybe.nothing;
     t.yes(vNothing.isNothing());
     t.not(vNothing.isJust());
     const vJust = Maybe.just(2);
@@ -20,7 +20,7 @@ export default class MaybeTest {
     const fn1 = x => x * 2;
     const fn2 = Maybe.just(fn1);
     /** @type {function(number):!Maybe<number>} */
-    const fn3 = x => x < 0 ? Maybe.nothing() : Maybe.just(x * 2);
+    const fn3 = x => x < 0 ? Maybe.nothing : Maybe.just(x * 2);
 
     t.yes(vNothing.fmap(fn1).isNothing());
     t.eq(vJust.fmap(fn1).fromJust(), 4);
@@ -32,7 +32,7 @@ export default class MaybeTest {
 
     const a = [Maybe.just(1), Maybe.just(2), Maybe.just(3), Maybe.just(4)];
     t.yes(It.from(Maybe.fromIterable(a).fromJust()).eq(It.from([1, 2, 3, 4])));
-    const a2 = [Maybe.just(1), Maybe.nothing(), Maybe.just(3), Maybe.nothing()];
+    const a2 = [Maybe.just(1), Maybe.nothing, Maybe.just(3), Maybe.nothing];
     t.yes(Maybe.fromIterable(a2).isNothing());
 
     t.log();

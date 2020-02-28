@@ -73,7 +73,7 @@ export default class Maybe {
       @return {!Maybe<U>}
   **/
   fmap (fn) {
-    if (this._e === null) return Maybe.nothing();
+    if (this._e === null) return Maybe.nothing;
     return Maybe.just(fn(this._e));
   }
 
@@ -83,7 +83,7 @@ export default class Maybe {
       @return {!Maybe<U>}
   **/
   comp (fn) {
-    if (fn._e === null) return Maybe.nothing();
+    if (fn._e === null) return Maybe.nothing;
     return this.fmap(fn._e);
   }
 
@@ -93,7 +93,7 @@ export default class Maybe {
       @return {!Maybe<U>}
   **/
   bind (fn) {
-    if (this._e === null) return Maybe.nothing();
+    if (this._e === null) return Maybe.nothing;
     return fn(this._e);
   }
 
@@ -128,8 +128,8 @@ export default class Maybe {
   /**
       @return {!Maybe}
   **/
-  static nothing () {
-    return new Maybe(null);
+  static get nothing () {
+    return Maybe._nothing;
   }
 
   /**
@@ -148,7 +148,7 @@ export default class Maybe {
       @return {!Maybe<T>}
   **/
   static flat (mb) {
-    if (mb._e === null) return Maybe.nothing();
+    if (mb._e === null) return Maybe.nothing;
     return mb._e;
   }
 
@@ -160,7 +160,7 @@ export default class Maybe {
   **/
   static fromJs (js, fn) {
     if (js.length) return Maybe.just(fn(js));
-    return Maybe.nothing();
+    return Maybe.nothing;
   }
 
   /**
@@ -170,7 +170,7 @@ export default class Maybe {
       @return {!Maybe<T>}
   **/
   static fromEither (ei) {
-    if (ei.isLeft()) return Maybe.nothing();
+    if (ei.isLeft()) return Maybe.nothing;
     return Maybe.just(ei.fromRight());
   }
 
@@ -180,7 +180,7 @@ export default class Maybe {
       @return {!Maybe<T>}
   **/
   static fromResult (rs) {
-    if (rs.isLeft()) return Maybe.nothing();
+    if (rs.isLeft()) return Maybe.nothing;
     return Maybe.just(rs.fromRight());
   }
 
@@ -192,9 +192,11 @@ export default class Maybe {
   static fromIterable (it) {
     const r = [];
     for (const e of it)
-      if (e._e === null) return Maybe.nothing();
+      if (e._e === null) return Maybe.nothing;
       else r.push(e._e);
     return Maybe.just(r);
   }
 
 }
+
+Maybe._nothing = new Maybe(null);
