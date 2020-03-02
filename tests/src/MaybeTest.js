@@ -35,6 +35,9 @@ export default class MaybeTest {
     const a2 = [Maybe.just(1), Maybe.nothing, Maybe.just(3), Maybe.nothing];
     t.yes(Maybe.fromIterable(a2).isNothing());
 
+    t.yes(Maybe.fromJs(Maybe.nothing.toJs()).isNothing());
+    t.eq(Maybe.fromJs(Maybe.just(22).toJs()).fromJust(), 22);
+
     t.log();
   }
 }

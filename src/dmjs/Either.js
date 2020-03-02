@@ -37,7 +37,7 @@ export default class Either {
   /**
       Returns the value if 'this' is 'Left' or throw an exception if it is
       'Right'.
-      @return {!L}
+      @return {L}
       @throws {string}
   **/
   fromLeft () {
@@ -48,7 +48,7 @@ export default class Either {
   /**
       Returns the value if 'this' is 'Right' or throw an exception if it is
       'Left'.
-      @return {!R}
+      @return {R}
       @throws {string}
   **/
   fromRight () {
@@ -58,8 +58,8 @@ export default class Either {
 
   /**
     Returns the value if 'this' is 'Right' or 'd' if it is 'Left'
-    @param {!R} d
-    @return {!R}
+    @param {R} d
+    @return {R}
   **/
   fromEither (d) {
     if (this._isR) return this._val;
@@ -69,8 +69,8 @@ export default class Either {
   /**
       Returns the value if 'this' is 'Right'. Otherwise throws an exception
       with the value of 'Left'.
-      @return {!R}
-      @throws {!L}
+      @return {R}
+      @throws {L}
   **/
   withFail () {
     if (this._isR) return this._val;
@@ -79,7 +79,7 @@ export default class Either {
 
   /**
       @template U
-      @param {function(!R):!U} fn
+      @param {function(R):!U} fn
       @return {!Either<L, U>}
   **/
   fmap (fn) {
@@ -89,7 +89,7 @@ export default class Either {
 
   /**
       @template U
-      @param {!Either<L, function(!R):!U>} fn
+      @param {!Either<L, function(R):!U>} fn
       @return {!Either<L, U>}
   **/
   comp (fn) {
@@ -99,7 +99,7 @@ export default class Either {
 
   /**
       @template U
-      @param {function(!R):!Either<L, U>} fn
+      @param {function(R):!Either<L, U>} fn
       @return {!Either<L, U>}
   **/
   bind (fn) {
@@ -108,18 +108,23 @@ export default class Either {
   }
 
   /**
-      @param {function(!L):!Array<?>} fnL
-      @param {function(!R):!Array<?>} fnR
+      @param {function(L):!Array<?>=} fnL
+      @param {function(R):!Array<?>=} fnR
       @return {!Array<?>} Serialization of 'this'.
   **/
   toJs (fnL, fnR) {
-    return [this._isR, this._isR ? fnR(this._val) : fnL(this._val)];
+    return [
+      this._isR,
+      this._isR
+        ? fnR === undefined ? this._val : fnR(this._val)
+        : fnL === undefined ? this._val : fnL(this._val)
+    ];
   }
 
   /**
       @template L
       @template R
-      @param {!L} l
+      @param {L} l
       @return {!Either<L, R>}
   **/
   static left (l) {
@@ -129,7 +134,7 @@ export default class Either {
   /**
     @template L
     @template R
-    @param {!R} r
+    @param {R} r
     @return {!Either<L, R>}
   **/
   static right (r) {
@@ -140,7 +145,7 @@ export default class Either {
       @template L
       @template R
       Simplification.
-      @param {!Either<L, Either<L, R>>} ei
+      @param {!Either<L, !Either<L, R>>} ei
       @return {!Either<L, R>}
   **/
   static flat (ei) {
@@ -152,13 +157,16 @@ export default class Either {
       @template L
       @template R
       @param {!Array<?>} js
-      @param {function(Array<?>):!L} fnL
-      @param {function(Array<?>):!R} fnR
+      @param {function(!Array<?>):L=} fnL
+      @param {function(!Array<?>):R=} fnR
       @return {!Either<L, R>}
   **/
   static fromJs (js, fnL, fnR) {
-    if (js.shift()) return Either.right(fnR(js));
-    return Either.left(fnL(js));
+    const isR = js[0];
+    return isR
+      ? fnR === undefined ? Either.right(js[1]) : Either.right(fnR(js[1]))
+      : fnL === undefined ? Either.left(js[1]) : Either.left(fnL(js[1]))
+    ;
   }
 
   /**

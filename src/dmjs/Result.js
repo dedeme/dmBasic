@@ -49,7 +49,7 @@ export default class Result {
   /**
       Returns the value if 'this' is 'Right' or throw an exception if it is
       'Left'.
-      @return {!R}
+      @return {R}
       @throws {string}
   **/
   fromRight () {
@@ -59,8 +59,8 @@ export default class Result {
 
   /**
     Returns the value if 'this' is 'Right' or 'd' if it is 'Left'
-    @param {!R} d
-    @return {!R}
+    @param {R} d
+    @return {R}
   **/
   fromResult (d) {
     if (this._isR) return this._val;
@@ -70,7 +70,7 @@ export default class Result {
   /**
       Returns the value if 'this' is 'Right'. Otherwise throws an exception
       with the value of 'Left'.
-      @return {!R}
+      @return {R}
       @throws {string}
   **/
   withFail () {
@@ -80,43 +80,45 @@ export default class Result {
 
   /**
       @template U
-      @param {function(!R):!U} fn
+      @param {function(R):U} fn
       @return {!Result<U>}
-      @suppress {checkTypes}
   **/
   fmap (fn) {
     if (this._isR) return Result.right(fn(this._val));
-    return this;
+    return /** @type {!Result<U>} */ (this);
   }
 
   /**
       @template U
-      @param {!Result<function(!R):!U>} fn
+      @param {!Result<function(R):U>} fn
       @return {!Result<U>}
-      @suppress {checkTypes}
   **/
   comp (fn) {
-    if (fn._isR) return this.fmap(fn._val);
-    return this;
+    if (fn._isR) return this.fmap(/** @type {function(R):U}} */ (fn._val));
+    return /** @type {!Result<U>} */ (this);
   }
 
   /**
       @template U
-      @param {function(!R):!Result<U>} fn
+      @param {function(R):!Result<U>} fn
       @return {!Result<U>}
-      @suppress {checkTypes}
   **/
   bind (fn) {
     if (this._isR) return fn(this._val);
-    return this;
+    return /** @type {!Result<U>} */ (this);
   }
 
   /**
-      @param {function(!R):!Array<?>} fnR
+      @param {function(R):!Array<?>=} fnR
       @return {!Array<?>} Serialization of 'this'.
   **/
   toJs (fnR) {
-    return [this._isR, this._isR ? fnR(this._val) : [this._val]];
+    return [
+      this._isR,
+      this._isR
+        ? fnR === undefined ? this._val : fnR(this._val)
+        : this._val
+    ];
   }
 
   /**
@@ -130,7 +132,7 @@ export default class Result {
 
   /**
     @template R
-    @param {!R} r
+    @param {R} r
     @return {!Result<R>}
   **/
   static right (r) {
@@ -142,7 +144,7 @@ export default class Result {
       @suppress {checkTypes}
   **/
   toEither () {
-    return this;
+    return /** @type {!Either<string, R>} */ (this);
   }
 
   /**
@@ -150,29 +152,31 @@ export default class Result {
       Simplification.
       @param {!Result<!Result<R>>} rs
       @return {!Result<R>}
-      @suppress {checkTypes}
   **/
   static flat (rs) {
-    if (rs._isR) return rs._val;
-    return Result.left(rs._val);
+    if (rs._isR) return /** @type {!Result<R>} */ (rs._val);
+    return Result.left(/** @type {string} */ (rs._val));
   }
 
   /**
       @template R
       @param {!Array<?>} js
-      @param {function(Array<?>):!R} fnR
+      @param {function(!Array<?>):R=} fnR
       @return {!Result<R>}
   **/
-  static fromJs (js, fnL, fnR) {
-    if (js.shift()) return Result.right(fnR(js));
-    return Result.left(js[0]);
+  static fromJs (js, fnR) {
+    const isR = js[0];
+    return isR
+      ? fnR === undefined ? Result.right(js[1]) : Result.right(fnR(js[1]))
+      : Result.left(js[1])
+    ;
   }
 
   /**
       @template T
       @template L
       @param {!Either<L, T>} ei
-      @param {function(!L):string} fn
+      @param {function(L):string} fn
       @return {!Result<T>}
   **/
   static fromEither (ei, fn) {
@@ -184,7 +188,6 @@ export default class Result {
       @template R
       @param {!Iterable<!Result<R>>} it
       @return {!Result<!Array<R>>}
-      @suppress {checkTypes}
   **/
   static fromIterable (it) {
     const r = [];

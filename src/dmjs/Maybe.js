@@ -12,7 +12,7 @@ export default class Maybe {
 
   /**
       @private
-      @param {?T} e
+      @param {T} e
   **/
   constructor (e) {
     this._e = e;
@@ -37,7 +37,7 @@ export default class Maybe {
   /**
       Returns the value if 'this' is 'Just' or throws an exception if it is
       'Nothing'.
-      @return {!T}
+      @return {T}
       @throws {string}
   **/
   fromJust () {
@@ -47,8 +47,8 @@ export default class Maybe {
 
   /**
     Returns the value if 'this' is 'Just' or 'd' if it is 'Nothing'
-    @param {!T} d
-    @return {!T}
+    @param {T} d
+    @return {T}
   **/
   fromMaybe (d) {
     if (this._e === null) return d;
@@ -59,7 +59,7 @@ export default class Maybe {
       Returns the value if 'this' is 'Just' or throw an exception with the
       message 'msg' if it is 'Nothing'
       @param {string} msg
-      @return {!T}
+      @return {T}
       @throws {string}
   **/
   withFail (msg) {
@@ -69,7 +69,7 @@ export default class Maybe {
 
   /**
       @template U
-      @param {function(!T):!U} fn
+      @param {function(T):!U} fn
       @return {!Maybe<U>}
   **/
   fmap (fn) {
@@ -79,7 +79,7 @@ export default class Maybe {
 
   /**
       @template U
-      @param {!Maybe<function(!T):!U>} fn
+      @param {!Maybe<function(T):!U>} fn
       @return {!Maybe<U>}
   **/
   comp (fn) {
@@ -89,7 +89,7 @@ export default class Maybe {
 
   /**
       @template U
-      @param {function(!T):!Maybe<U>} fn
+      @param {function(T):!Maybe<U>} fn
       @return {!Maybe<U>}
   **/
   bind (fn) {
@@ -99,7 +99,7 @@ export default class Maybe {
 
   /**
       @template L
-      @param {!L} d
+      @param {L} d
       @return {!Either<L, T>}
   **/
   toEither (d) {
@@ -117,16 +117,18 @@ export default class Maybe {
   }
 
   /**
-      @param {function(!T):!Array<?>} fn
+      @param {function(T):!Array<?>=} fn
       @return {!Array<?>} Serialization of 'this'.
   **/
   toJs (fn) {
-    if (this._e === null) return [];
-    return fn(this._e);
+    return (this._e === null)
+      ? []
+      : fn === undefined ? [this._e] : [fn(this._e)]
+    ;
   }
 
   /**
-      @return {!Maybe}
+      @return {!Maybe<?>}
   **/
   static get nothing () {
     return Maybe._nothing;
@@ -134,7 +136,7 @@ export default class Maybe {
 
   /**
     @template T
-    @param {!T} e
+    @param {T} e
     @return {!Maybe<T>}
   **/
   static just (e) {
@@ -144,7 +146,7 @@ export default class Maybe {
   /**
       @template T
       Simplification.
-      @param {!Maybe<Maybe<T>>} mb
+      @param {!Maybe<!Maybe<T>>} mb
       @return {!Maybe<T>}
   **/
   static flat (mb) {
@@ -155,12 +157,14 @@ export default class Maybe {
   /**
       @template T
       @param {!Array<?>} js
-      @param {function(Array<?>):!T} fn
+      @param {function(!Array<?>):T=} fn
       @return {!Maybe<T>}
   **/
   static fromJs (js, fn) {
-    if (js.length) return Maybe.just(fn(js));
-    return Maybe.nothing;
+    return js.length
+      ? fn === undefined ? Maybe.just(js[0]) : Maybe.just(fn(js[0]))
+      : Maybe.nothing
+    ;
   }
 
   /**
