@@ -56,6 +56,17 @@ export default class Maybe {
   }
 
   /**
+      Executes fElse if 'this' is 'Nothing'. Otherwise executes fIf
+      @param {function(T):void} fIf
+      @param {function():void} fElse
+      @return
+  **/
+  ifElse (fIf, fElse) {
+    if (this._e === null) fElse();
+    else fIf(this._e);
+  }
+
+  /**
       Returns the value if 'this' is 'Just' or throw an exception with the
       message 'msg' if it is 'Nothing'
       @param {string} msg
@@ -68,6 +79,7 @@ export default class Maybe {
   }
 
   /**
+      fn(t->u) -> M<u>
       @template U
       @param {function(T):!U} fn
       @return {!Maybe<U>}
@@ -78,6 +90,7 @@ export default class Maybe {
   }
 
   /**
+      M<fn(t->u)> -> M<u>
       @template U
       @param {!Maybe<function(T):!U>} fn
       @return {!Maybe<U>}
@@ -88,6 +101,7 @@ export default class Maybe {
   }
 
   /**
+      fn(t->M<u>) -> M<u>
       @template U
       @param {function(T):!Maybe<U>} fn
       @return {!Maybe<U>}

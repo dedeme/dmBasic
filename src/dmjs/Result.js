@@ -68,6 +68,17 @@ export default class Result {
   }
 
   /**
+      Executes fElse if 'this' is 'Left'. Otherwise executes fIf
+      @param {function(R):void} fIf
+      @param {function(string):void} fElse
+      @return
+  **/
+  ifElse (fIf, fElse) {
+    if (this._isR) fIf(this._val);
+    else fElse(this._val);
+  }
+
+  /**
       Returns the value if 'this' is 'Right'. Otherwise throws an exception
       with the value of 'Left'.
       @return {R}
@@ -79,6 +90,7 @@ export default class Result {
   }
 
   /**
+      fn(t->u) -> R<u>
       @template U
       @param {function(R):U} fn
       @return {!Result<U>}
@@ -89,6 +101,7 @@ export default class Result {
   }
 
   /**
+      R<fn(t->u)> -> R<u>
       @template U
       @param {!Result<function(R):U>} fn
       @return {!Result<U>}
@@ -99,6 +112,7 @@ export default class Result {
   }
 
   /**
+      fn(t->R<u>) -> R<u>
       @template U
       @param {function(R):!Result<U>} fn
       @return {!Result<U>}

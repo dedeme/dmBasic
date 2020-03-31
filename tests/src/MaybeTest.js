@@ -38,6 +38,15 @@ export default class MaybeTest {
     t.yes(Maybe.fromJs(Maybe.nothing.toJs()).isNothing());
     t.eq(Maybe.fromJs(Maybe.just(22).toJs()).fromJust(), 22);
 
+    Maybe.nothing.ifElse(
+      () => t.yes(false),
+      () => t.yes(true)
+    );
+    Maybe.just(3).ifElse(
+      e => t.eq(e, 3),
+      () => t.yes(false)
+    );
+
     t.log();
   }
 }

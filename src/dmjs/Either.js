@@ -67,6 +67,17 @@ export default class Either {
   }
 
   /**
+      Executes fElse if 'this' is 'Left'. Otherwise executes fIf
+      @param {function(R):void} fIf
+      @param {function(L):void} fElse
+      @return
+  **/
+  ifElse (fIf, fElse) {
+    if (this._isR) fIf(this._val);
+    else fElse(this._val);
+  }
+
+  /**
       Returns the value if 'this' is 'Right'. Otherwise throws an exception
       with the value of 'Left'.
       @return {R}
@@ -78,6 +89,7 @@ export default class Either {
   }
 
   /**
+      fn(t->u) -> E<l, u>
       @template U
       @param {function(R):!U} fn
       @return {!Either<L, U>}
@@ -88,6 +100,7 @@ export default class Either {
   }
 
   /**
+      E<l, fn(t->u)> -> E<l, u>
       @template U
       @param {!Either<L, function(R):!U>} fn
       @return {!Either<L, U>}
@@ -98,6 +111,7 @@ export default class Either {
   }
 
   /**
+      fn(t->E<l, u>) -> E<l, u>
       @template U
       @param {function(R):!Either<L, U>} fn
       @return {!Either<L, U>}

@@ -46,6 +46,15 @@ export default class MaybeTest {
     t.eq(Result.fromJs(Result.left("err").toJs()).fromLeft(), "err");
     t.eq(Result.fromJs(Result.right(22).toJs()).fromRight(), 22);
 
+    Result.left("Err").ifElse(
+      () => t.yes(false),
+      e => t.eq(e, "Err")
+    );
+    Result.right(3).ifElse(
+      e => t.eq(e, 3),
+      () => t.yes(false)
+    );
+
     t.log();
   }
 }
