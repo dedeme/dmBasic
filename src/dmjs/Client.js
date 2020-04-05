@@ -8,14 +8,17 @@
      ****************
        1.- CONNECT: Client program try to connect with sessionId
          * Wrong -> (communicationKey = "") AUTHENTICATION
-         * Right -> Returns communicationKey, user name and user level
+         * Right -> Returns communicationKey, connectionKey, user name and
+                    user level
 
-       2.- NORMAL COMMUNICATION: Client send data with sessionId and encrypted
+       2.- NORMAL COMMUNICATION: Client send data with sessionId and optionally
+                                 with connectionKey. This data is encrypted
                                  with communicationKey.
 
        3.- AUTHENTICATION: Client send user, password and persisitent.
          * Wrong -> AUTHENTICATION
-         * RIGHT -> Returns sessionId, communicationKey and user level
+         * RIGHT -> Returns sessionId, communicationKey, connectionKey and
+                    user level
 
      *** Client Messages ***
      ***********************
@@ -28,22 +31,31 @@
        NORMAL COMMUNICATION: sessionId:data
          sessionId -> As it comes from server.
          data -> Data to send, codified with Cryp.cryp and communicationKey.
+       SECURE COMMUNICATION: sessionId:connectionKey:data
+         sessionId -> As it comes from server.
+         connectionKey -> Key received from server.
+         data -> Data to send, codified with Cryp.cryp and communicationKey.
 
-     *** Server Messages    **
+     *** Server Messages  **
      ***********************
-       AUTHENTICATION: Data.key, Data.sessionId, Data.level
+       AUTHENTICATION: Data.key, Data.conKey, Data.sessionId, Data.level
          Data is codified with appName.
          Data.key is a fresh string or "" if connection failed.
+         Data.conKey is a fresh string or "" if connection failed.
          Data.sessionId is a fresh string or "".
          Data.level "0" for admin, another value for users and
                     "" if connection failed.
-       CONNECT: Data.key, Data.connectionId
+       CONNECT: Data.key, Data.conKey, Data.connectionId
          Data is codified with sessionId.
          Data.key is the communication key or "" if connection failed.
+         Data.conKey is the connection Key or "" if connection failed.
          Data.user is the user name or "".
          Data.level "0" for admin, another value for users and
                     "" if connection failed.
        NORMAL COMMUNICATION: Data.? | Data.expired
+         Data.? is a response codified with communicationKey.
+         Data.expired with value 'true', codified with "nosession"
+       SECURE COMMUNICATION: Data.? | Data.expired
          Data.? is a response codified with communicationKey.
          Data.expired with value 'true', codified with "nosession"
 **/
@@ -99,6 +111,12 @@ export default class Client {
         @type {string}
     **/
     this._level = "";
+
+    /**
+        @private
+        @type {string}
+    **/
+    this._connectionKey = "";
 
   }
 
@@ -174,6 +192,7 @@ export default class Client {
       self._key = key;
       self._user = data["user"];
       self._level = data["level"];
+      self._connectionKey = data["conKey"];
       return true;
     } catch (e) {
       //eslint-disable-next-line
@@ -207,6 +226,7 @@ export default class Client {
       self._key = data["key"];
       self._user = data["user"];
       self._level = data["level"];
+      self._connectionKey = data["conKey"];
       return true;
     } catch (e) {
       //eslint-disable-next-line
@@ -217,14 +237,18 @@ export default class Client {
 
   /**
       Sends data to server.
+      @param {boolean} isSecure
       @param {!Object<string, ?>} data
       @return {!Promise}
   **/
-  async send (data) {
+  async sendCommon (isSecure, data) {
     const self = this;
-    const rp = await self.sendServer(
-      self.sessionId() + ":" + Cryp.cryp(self._key, JSON.stringify(data))
-    );
+    const rq = isSecure
+      ? self.sessionId() + ":" +
+        self._connectionKey + ":" + Cryp.cryp(self._key, JSON.stringify(data))
+      : self.sessionId() + ":" + Cryp.cryp(self._key, JSON.stringify(data))
+    ;
+    const rp = await self.sendServer(rq);
 
     try {
       const jdata = Cryp.decryp(self._key, rp);
@@ -246,6 +270,25 @@ export default class Client {
         return null;
       }
     }
+  }
+
+  /**
+      Sends normal data to server.
+      @param {!Object<string, ?>} data
+      @return {!Promise}
+  **/
+  send (data) {
+    return this.sendCommon(false, data);
+  }
+
+  /**
+      Sends secure data to server to protect data against out of date
+      modifications.
+      @param {!Object<string, ?>} data
+      @return {!Promise}
+  **/
+  ssend (data) {
+    return this.sendCommon(true, data);
   }
 
   /**
